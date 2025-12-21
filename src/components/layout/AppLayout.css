@@ -1,0 +1,61 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   APP LAYOUT STYLES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.app-layout {
+    display: flex;
+    min-height: 100vh;
+    background: var(--color-neutral-50);
+}
+
+.app-layout__main {
+    flex: 1;
+    margin-left: var(--sidebar-width);
+    min-height: 100vh;
+    transition: margin-left var(--duration-normal) var(--ease-out);
+}
+
+.app-layout--collapsed .app-layout__main {
+    margin-left: var(--sidebar-width-collapsed);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   LOADER
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.app-layout__loader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    gap: var(--space-4);
+    color: var(--color-neutral-500);
+}
+
+.app-layout__loader-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--color-neutral-200);
+    border-top-color: var(--color-primary-500);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   RESPONSIVE
+   ───────────────────────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+    .app-layout__main {
+        margin-left: 0;
+        padding-bottom: 70px;
+        /* Space for mobile nav */
+    }
+}

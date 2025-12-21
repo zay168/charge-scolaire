@@ -1,0 +1,223 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   LOAD INDICATOR STYLES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   BASE INDICATOR
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.load-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-weight: var(--font-medium);
+    transition: all var(--duration-fast) var(--ease-out);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   VARIANTS
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.load-indicator--badge {
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-full);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wider);
+}
+
+.load-indicator--dot {
+    padding: 0;
+}
+
+.load-indicator--dot .load-indicator__emoji {
+    font-size: 0.75em;
+}
+
+.load-indicator--pill {
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-lg);
+    font-size: var(--text-sm);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   SIZES
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.load-indicator--small {
+    font-size: var(--text-xs);
+}
+
+.load-indicator--small .load-indicator__emoji {
+    font-size: 0.875rem;
+}
+
+.load-indicator--medium {
+    font-size: var(--text-sm);
+}
+
+.load-indicator--large {
+    font-size: var(--text-base);
+    padding: var(--space-2) var(--space-4);
+}
+
+.load-indicator--large .load-indicator__emoji {
+    font-size: 1.25rem;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   STATUS COLORS
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.load-indicator--light {
+    background: hsl(142, 70%, 95%);
+    color: hsl(142, 70%, 30%);
+}
+
+.load-indicator--medium {
+    background: hsl(42, 90%, 94%);
+    color: hsl(42, 90%, 28%);
+}
+
+.load-indicator--heavy {
+    background: hsl(4, 85%, 95%);
+    color: hsl(4, 85%, 35%);
+}
+
+.load-indicator--critical {
+    background: hsl(350, 90%, 94%);
+    color: hsl(350, 90%, 30%);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ANIMATION
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.load-indicator--animated.load-indicator--heavy,
+.load-indicator--animated.load-indicator--critical {
+    animation: pulse-warning 2s ease-in-out infinite;
+}
+
+@keyframes pulse-warning {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.8;
+        transform: scale(1.02);
+    }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ELEMENTS
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.load-indicator__emoji {
+    line-height: 1;
+}
+
+.load-indicator__label {
+    font-weight: var(--font-semibold);
+}
+
+.load-indicator__score {
+    padding-left: var(--space-2);
+    border-left: 1px solid currentColor;
+    opacity: 0.7;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PROGRESS BAR VARIANT
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.load-progress {
+    width: 100%;
+}
+
+.load-progress__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-2);
+}
+
+.load-progress__label {
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    color: var(--color-neutral-600);
+}
+
+.load-progress__status {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--text-xs);
+    font-weight: var(--font-semibold);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+}
+
+.load-progress__track {
+    width: 100%;
+    background: var(--color-neutral-100);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+}
+
+.load-progress__fill {
+    height: 100%;
+    border-radius: var(--radius-full);
+    transition: width var(--duration-slow) var(--ease-out);
+}
+
+.load-progress__fill.load-indicator--light {
+    background: linear-gradient(90deg, hsl(142, 70%, 50%), hsl(142, 70%, 40%));
+}
+
+.load-progress__fill.load-indicator--medium {
+    background: linear-gradient(90deg, hsl(42, 90%, 55%), hsl(42, 90%, 45%));
+}
+
+.load-progress__fill.load-indicator--heavy {
+    background: linear-gradient(90deg, hsl(4, 85%, 55%), hsl(4, 85%, 45%));
+}
+
+.load-progress__fill.load-indicator--critical {
+    background: linear-gradient(90deg, hsl(350, 90%, 50%), hsl(350, 90%, 40%));
+    animation: pulse-bar 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-bar {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+}
+
+.load-progress__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-1);
+    margin-top: var(--space-1);
+    font-size: var(--text-xs);
+}
+
+.load-progress__score {
+    font-weight: var(--font-semibold);
+    color: var(--color-neutral-800);
+    font-variant-numeric: tabular-nums;
+}
+
+.load-progress__max {
+    color: var(--color-neutral-400);
+}
