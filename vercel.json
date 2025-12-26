@@ -3,6 +3,10 @@
         {
             "source": "/api/ed/:path*",
             "destination": "/api/ed/:path*"
+        },
+        {
+            "source": "/((?!api|_next|static|.*\\..*).*)",
+            "destination": "/index.html"
         }
     ]
 }
