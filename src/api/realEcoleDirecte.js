@@ -357,9 +357,10 @@ class RealEcoleDirecteClient {
             await this.fetchGtkToken();
 
             // Build login payload with mobile-style authentication for silent relogin
+            // Credentials must be encoded like in Ecole-Directe-Plus
             const payload = {
-                identifiant: username,
-                motdepasse: password,
+                identifiant: encodeURIComponent(username),
+                motdepasse: encodeURIComponent(password),
                 isReLogin: false,
                 sesouvenirdemoi: rememberMe, // Enable mobile-style auth for token renewal
                 uuid: this.deviceUUID, // Device identifier for token renewal
