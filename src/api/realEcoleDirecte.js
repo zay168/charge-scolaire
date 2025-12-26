@@ -16,11 +16,9 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-const API_VERSION = '4.75.0';
+import { ED_API_BASE } from './config.js';
 
-// API Base URL - Always use proxy to bypass CORS
-// The proxy works in both dev (Vite) and production (Vercel serverless)
-const ED_API_BASE = '/api/ed';
+const API_VERSION = '4.75.0';
 
 console.log('🔧 API Config:', {
     apiBase: ED_API_BASE
