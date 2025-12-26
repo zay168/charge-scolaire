@@ -1,12 +1,15 @@
 {
-    "rewrites": [
+    "routes": [
         {
-            "source": "/api/ed/:path*",
-            "destination": "/api/ed/:path*"
+            "handle": "filesystem"
         },
         {
-            "source": "/((?!api|_next|static|.*\\..*).*)",
-            "destination": "/index.html"
+            "src": "/api/(.*)",
+            "dest": "/api/$1"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/index.html"
         }
     ]
 }
