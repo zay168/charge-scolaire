@@ -378,6 +378,7 @@ class RealEcoleDirecteClient {
             const headers = {
                 'Content-Type': 'application/x-www-form-urlencoded',
             };
+            if (this.gtkToken) headers['X-Gtk'] = this.gtkToken;
             if (this.token) headers['X-Token'] = this.token;
             if (this.token2fa) headers['2FA-Token'] = this.token2fa;
 

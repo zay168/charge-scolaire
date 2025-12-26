@@ -24,7 +24,7 @@ export default async function handler(req, res) {
     // Enable CORS
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Token');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Token, X-Gtk');
     res.setHeader('Access-Control-Expose-Headers', 'X-GTK-Token, X-2FA-Token');
 
     // Handle preflight
@@ -70,6 +70,11 @@ export default async function handler(req, res) {
         // Forward X-Token
         if (req.headers['x-token']) {
             headers['X-Token'] = req.headers['x-token'];
+        }
+
+        // Forward X-Gtk (required since March 2025)
+        if (req.headers['x-gtk']) {
+            headers['X-Gtk'] = req.headers['x-gtk'];
         }
 
         // Forward cookies
