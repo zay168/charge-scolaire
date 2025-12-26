@@ -72,22 +72,20 @@ export default async function handler(req, res) {
             headers['X-Token'] = req.headers['x-token'];
         }
 
-        // Build Cookie header - GTK must be sent as cookie to ED API
-        const cookies = [];
-
-        // Add GTK from X-Gtk header (frontend stores it from previous request)
-        if (req.headers['x-gtk']) {
-            cookies.push(`GTK=${req.headers['x-gtk']}`);
-        }
-
-        // Forward existing cookies
-        if (req.headers.cookie) {
-            cookies.push(req.headers.cookie);
-        }
-
-        if (cookies.length > 0) {
-            headers['Cookie'] = cookies.join('; ');
-            console.log('[Proxy] Cookies:', headers['Cookie'].substring(0, 50));
+        // GTK handling (like EDP Unblock extension does)
+        // The extension sends GTK as BOTH header X-GTK AND Cookie
+        const gtkToken = req.headers['x-gtk'];
+        if (gtkToken) {
+            // Set X-GTK header (like extension does)
+            headers['X-GTK'] = gtkToken;
+            // Also set as Cookie
+            const existingCookies = req.headers.cookie || '';
+            headers['Cookie'] = existingCookies
+                ? `GTK=${gtkToken}; ${existingCookies}`
+                : `GTK=${gtkToken}`;
+            console.log('[Proxy] GTK set as header and cookie');
+        } else if (req.headers.cookie) {
+            headers['Cookie'] = req.headers.cookie;
         }
 
         // Get raw body for POST (preserves exact format)
