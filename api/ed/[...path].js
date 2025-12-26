@@ -16,20 +16,25 @@ export default async function handler(req, res) {
     }
 
     try {
-        // Get the path from the URL
-        const { path } = req.query;
-        const apiPath = Array.isArray(path) ? path.join('/') : path || '';
+        // Extract path from URL - remove /api/ed/ prefix
+        const fullUrl = req.url || '';
+        const pathMatch = fullUrl.match(/\/api\/ed\/(.+)/);
+        let apiPath = pathMatch ? pathMatch[1] : '';
 
-        if (!apiPath) {
-            return res.status(400).json({ error: 'Missing API path' });
+        // If path comes from query (Vercel's [...path] format)
+        if (!apiPath && req.query.path) {
+            apiPath = Array.isArray(req.query.path) ? req.query.path.join('/') : req.query.path;
         }
 
-        // Build target URL with query params
-        const url = new URL(req.url, `https://${req.headers.host}`);
-        const queryString = url.search || '';
-        const targetUrl = `https://api.ecoledirecte.com/v3/${apiPath}${queryString}`;
+        if (!apiPath) {
+            console.log('[Proxy] No path found in:', fullUrl, 'query:', req.query);
+            return res.status(400).json({ error: 'Missing API path', url: fullUrl });
+        }
 
-        console.log(`[Proxy] ${req.method} ${targetUrl}`);
+        // Build target URL (apiPath already includes query string from original URL)
+        const targetUrl = `https://api.ecoledirecte.com/v3/${apiPath}`;
+
+        console.log(`[Proxy] ${req.method} -> ${targetUrl}`);
 
         // Build headers
         const headers = {
@@ -52,7 +57,12 @@ export default async function handler(req, res) {
         // Get body for POST
         let body = undefined;
         if (req.method === 'POST') {
-            body = typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
+            // Handle different body formats
+            if (typeof req.body === 'string') {
+                body = req.body;
+            } else if (req.body) {
+                body = JSON.stringify(req.body);
+            }
         }
 
         // Make request to École Directe
@@ -71,6 +81,7 @@ export default async function handler(req, res) {
             const gtkMatch = setCookie.match(/GTK=([^;]+)/);
             if (gtkMatch) {
                 res.setHeader('X-GTK-Token', gtkMatch[1]);
+                console.log('[Proxy] GTK extracted');
             }
         }
 
