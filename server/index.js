@@ -59,6 +59,9 @@ app.all('/api/ed/*', async (req, res) => {
         // Add session cookies
         if (session.cookies.length > 0) {
             headers['Cookie'] = session.cookies.join('; ');
+            console.log(`[Proxy] Injecting ${session.cookies.length} cookies for session ${sessionId}`);
+        } else {
+            console.warn(`[Proxy] No cookies found for session ${sessionId}`);
         }
 
         // Add GTK header if we have it
