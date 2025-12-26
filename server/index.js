@@ -16,7 +16,7 @@ const sessions = new Map();
 app.use(cors({
     origin: true,
     credentials: true,
-    exposedHeaders: ['X-Session-Id']
+    exposedHeaders: ['X-Session-Id', 'X-Token', '2FA-Token']
 }));
 
 app.use(express.text({ type: '*/*' }));
@@ -59,9 +59,6 @@ app.all('/api/ed/*', async (req, res) => {
         // Add session cookies
         if (session.cookies.length > 0) {
             headers['Cookie'] = session.cookies.join('; ');
-            console.log(`[Proxy] Injecting ${session.cookies.length} cookies for session ${sessionId}`);
-        } else {
-            console.warn(`[Proxy] No cookies found for session ${sessionId}`);
         }
 
         // Add GTK header if we have it
@@ -72,6 +69,11 @@ app.all('/api/ed/*', async (req, res) => {
         // Forward X-Token
         if (req.headers['x-token']) {
             headers['X-Token'] = req.headers['x-token'];
+        }
+
+        // Forward 2FA-Token (crucial for QCM)
+        if (req.headers['2fa-token']) {
+            headers['2FA-Token'] = req.headers['2fa-token'];
         }
 
         // Make request
@@ -108,6 +110,13 @@ app.all('/api/ed/*', async (req, res) => {
         // Send response with session ID
         res.setHeader('X-Session-Id', sessionId);
         res.setHeader('Content-Type', 'application/json');
+
+        // Forward token headers from ED response to client
+        const xToken = response.headers.get('x-token');
+        const token2fa = response.headers.get('2fa-token');
+        if (xToken) res.setHeader('X-Token', xToken);
+        if (token2fa) res.setHeader('2FA-Token', token2fa);
+
         res.status(response.status).send(data);
 
     } catch (error) {
