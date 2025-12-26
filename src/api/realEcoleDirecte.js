@@ -605,6 +605,7 @@ class RealEcoleDirecteClient {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'X-Token': this.token,
                 '2FA-Token': this.token2fa,
+                ...(this.sessionId ? { 'X-Session-Id': this.sessionId } : {})
             },
             body: 'data={}',
             referrerPolicy: 'no-referrer',
@@ -662,6 +663,7 @@ class RealEcoleDirecteClient {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'X-Token': this.token,
                 '2FA-Token': this.token2fa,
+                ...(this.sessionId ? { 'X-Session-Id': this.sessionId } : {})
             },
             body: 'data=' + JSON.stringify({ choix: encodedAnswer }),
             referrerPolicy: 'no-referrer',
