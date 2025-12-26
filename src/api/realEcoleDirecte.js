@@ -175,6 +175,9 @@ class RealEcoleDirecteClient {
 
         // Silent relogin in progress flag
         this.silentReloginPromise = null;
+
+        // Session ID for stateful proxy (Railway)
+        this.sessionId = null;
     }
 
     /**
@@ -269,6 +272,14 @@ class RealEcoleDirecteClient {
             });
 
             const gtkHeader = response.headers.get('x-gtk-token');
+
+            // Capture Session ID from proxy (essential for Railway backend)
+            const sessionId = response.headers.get('x-session-id');
+            if (sessionId) {
+                this.sessionId = sessionId;
+                console.log('✅ Session ID captured:', sessionId);
+            }
+
             if (gtkHeader) {
                 this.gtkToken = gtkHeader;
                 console.log('✅ GTK token retrieved from proxy header');
@@ -377,6 +388,9 @@ class RealEcoleDirecteClient {
             const headers = {
                 'Content-Type': 'application/x-www-form-urlencoded',
             };
+            // Forward Session ID if available
+            if (this.sessionId) headers['X-Session-Id'] = this.sessionId;
+
             if (this.gtkToken) headers['X-Gtk'] = this.gtkToken;
             if (this.token) headers['X-Token'] = this.token;
             if (this.token2fa) headers['2FA-Token'] = this.token2fa;
@@ -527,6 +541,7 @@ class RealEcoleDirecteClient {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
+                    ...(this.sessionId ? { 'X-Session-Id': this.sessionId } : {})
                 },
                 body: 'data=' + JSON.stringify(payload),
                 referrerPolicy: 'no-referrer',
@@ -949,6 +964,10 @@ class RealEcoleDirecteClient {
                 'X-Token': this.token,
             };
 
+            // Forward Session ID if available
+            if (this.sessionId) {
+                headers['X-Session-Id'] = this.sessionId;
+            }
             // Add 2FA-Token if available (needed after QCM auth)
             if (this.token2fa) {
                 headers['2FA-Token'] = this.token2fa;
