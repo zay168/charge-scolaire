@@ -72,14 +72,22 @@ export default async function handler(req, res) {
             headers['X-Token'] = req.headers['x-token'];
         }
 
-        // Forward X-Gtk (required since March 2025)
+        // Build Cookie header - GTK must be sent as cookie to ED API
+        const cookies = [];
+
+        // Add GTK from X-Gtk header (frontend stores it from previous request)
         if (req.headers['x-gtk']) {
-            headers['X-Gtk'] = req.headers['x-gtk'];
+            cookies.push(`GTK=${req.headers['x-gtk']}`);
         }
 
-        // Forward cookies
+        // Forward existing cookies
         if (req.headers.cookie) {
-            headers['Cookie'] = req.headers.cookie;
+            cookies.push(req.headers.cookie);
+        }
+
+        if (cookies.length > 0) {
+            headers['Cookie'] = cookies.join('; ');
+            console.log('[Proxy] Cookies:', headers['Cookie'].substring(0, 50));
         }
 
         // Get raw body for POST (preserves exact format)
