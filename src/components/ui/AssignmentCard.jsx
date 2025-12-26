@@ -8,21 +8,17 @@
 import { LoadIndicator } from './LoadIndicator';
 import './AssignmentCard.css';
 
-const WEIGHT_LABELS = {
-    LIGHT: 'Léger',
-    MEDIUM: 'Moyen',
-    HEAVY: 'Lourd',
-    CONTROL: 'Contrôle',
-    QUIZ: 'Interro',
-    DST: 'DST',
-    EXAM: 'Examen',
-};
-
-const TYPE_ICONS = {
-    homework: '📝',
-    test: '📋',
-    dst: '📊',
-    control: '✍️',
+const TYPE_CONFIG = {
+    test: {
+        icon: '📋',
+        label: 'Évaluation',
+        status: 'heavy',
+    },
+    homework: {
+        icon: '📝',
+        label: 'Devoir',
+        status: 'medium',
+    },
 };
 
 export function AssignmentCard({
@@ -33,19 +29,23 @@ export function AssignmentCard({
 }) {
     const {
         subject,
-        subjectCode,
         teacher,
         type,
-        weight,
         dueDate,
         content,
         done,
         classId,
     } = assignment;
 
+    // Get type config (default to homework)
+    const typeConfig = TYPE_CONFIG[type] || TYPE_CONFIG.homework;
+
     // Format date
     const formatDate = (dateStr) => {
+        if (!dateStr) return '—';
         const date = new Date(dateStr);
+        if (isNaN(date.getTime())) return '—';
+
         const today = new Date();
         const tomorrow = new Date(today);
         tomorrow.setDate(tomorrow.getDate() + 1);
@@ -64,15 +64,6 @@ export function AssignmentCard({
         });
     };
 
-    // Get status from weight
-    const getStatus = () => {
-        if (weight === 'LIGHT') return 'light';
-        if (weight === 'MEDIUM') return 'medium';
-        if (weight === 'HEAVY' || weight === 'CONTROL') return 'heavy';
-        if (weight === 'DST' || weight === 'EXAM') return 'critical';
-        return 'medium';
-    };
-
     const classes = [
         'assignment-card',
         compact && 'assignment-card--compact',
@@ -89,7 +80,7 @@ export function AssignmentCard({
         >
             <div className="assignment-card__header">
                 <div className="assignment-card__icon">
-                    {TYPE_ICONS[type] || '📄'}
+                    {typeConfig.icon}
                 </div>
                 <div className="assignment-card__meta">
                     <h4 className="assignment-card__subject">{subject}</h4>
@@ -98,14 +89,21 @@ export function AssignmentCard({
                     )}
                 </div>
                 <LoadIndicator
-                    status={getStatus()}
+                    status={typeConfig.status}
                     showLabel={!compact}
                     size={compact ? 'small' : 'medium'}
                 />
             </div>
 
-            {!compact && (
-                <p className="assignment-card__content">{content}</p>
+            {!compact && content && (
+                <p
+                    className="assignment-card__content"
+                    dangerouslySetInnerHTML={{
+                        __html: content.length > 150
+                            ? content.substring(0, 150) + '...'
+                            : content
+                    }}
+                />
             )}
 
             <div className="assignment-card__footer">
@@ -113,8 +111,8 @@ export function AssignmentCard({
                 {showClass && classId && (
                     <span className="assignment-card__class">{classId}</span>
                 )}
-                <span className="assignment-card__weight">
-                    {WEIGHT_LABELS[weight] || weight}
+                <span className={`assignment-card__type assignment-card__type--${type || 'homework'}`}>
+                    {typeConfig.label}
                 </span>
             </div>
 

@@ -10,6 +10,24 @@ import { WorkloadProvider } from './contexts/WorkloadContext';
 import { AppLayout } from './components/layout/AppLayout';
 import { LoginPage } from './pages/LoginPage';
 import { DashboardPage } from './pages/DashboardPage';
+import { GradesPage } from './pages/GradesPage';
+import { SchedulePage } from './pages/SchedulePage';
+import { MessagesPage } from './pages/MessagesPage';
+import { AssignmentsPage } from './pages/AssignmentsPage';
+import { StatisticsPage } from './pages/StatisticsPage';
+
+// Teacher pages
+import { TeacherLoginPage } from './pages/teacher/TeacherLogin';
+import { TeacherLayout } from './pages/teacher/TeacherLayout';
+import { TeacherDashboard } from './pages/teacher/TeacherDashboard';
+import { TeacherClasses } from './pages/teacher/TeacherClasses';
+import TeacherWorkload from './pages/teacher/TeacherWorkload';
+import { TeacherStudents } from './pages/teacher/TeacherStudents';
+import { TeacherSchedule } from './pages/teacher/TeacherSchedule';
+import { TeacherGrades } from './pages/teacher/TeacherGrades';
+import { TeacherMessages } from './pages/teacher/TeacherMessages';
+import DSTManager from './pages/admin/DSTManager';
+import DSTBoardEditor from './pages/admin/DSTBoardEditor';
 
 // Import global styles
 import './styles/design-system.css';
@@ -23,15 +41,37 @@ function App() {
           <Routes>
             {/* Public routes */}
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/teacher/login" element={<TeacherLoginPage />} />
 
-            {/* Protected routes */}
+            {/* Teacher routes (separate layout) */}
+            <Route path="/teacher" element={<TeacherLayout />}>
+              <Route index element={<TeacherDashboard />} />
+              <Route path="classes" element={<TeacherClasses />} />
+              <Route path="workload" element={<TeacherWorkload />} />
+              <Route path="students" element={<TeacherStudents />} />
+              <Route path="schedule" element={<TeacherSchedule />} />
+              <Route path="grades" element={<TeacherGrades />} />
+              <Route path="messages" element={<TeacherMessages />} />
+              <Route path="dst" element={<DSTBoardEditor />} />
+              <Route path="assignments" element={<PlaceholderPage title="📝 Mes Devoirs" />} />
+              <Route path="create" element={<PlaceholderPage title="➕ Créer un devoir" />} />
+              <Route path="stats" element={<PlaceholderPage title="📊 Statistiques" />} />
+            </Route>
+
+            {/* DST Board Editor (full-screen, no layout) */}
+            <Route path="/dst-board" element={<DSTBoardEditor />} />
+
+            {/* Protected student routes */}
             <Route element={<AppLayout />}>
               <Route path="/" element={<DashboardPage />} />
+              <Route path="/grades" element={<GradesPage />} />
+              <Route path="/schedule" element={<SchedulePage />} />
+              <Route path="/messages" element={<MessagesPage />} />
+              <Route path="/assignments" element={<AssignmentsPage />} />
+              <Route path="/statistics" element={<StatisticsPage />} />
               <Route path="/calendar" element={<PlaceholderPage title="📅 Calendrier" />} />
-              <Route path="/assignments" element={<PlaceholderPage title="📝 Devoirs" />} />
               <Route path="/classes" element={<PlaceholderPage title="👥 Mes Classes" />} />
               <Route path="/add-assignment" element={<PlaceholderPage title="➕ Ajouter un devoir" />} />
-              <Route path="/statistics" element={<PlaceholderPage title="📊 Statistiques" />} />
             </Route>
 
             {/* Fallback */}

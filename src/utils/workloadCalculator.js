@@ -31,22 +31,22 @@ export const WORKLOAD_WEIGHTS = {
 
 export const WORKLOAD_THRESHOLDS = {
   daily: {
-    LIGHT: 4,      // 🟢 Charge légère
-    MEDIUM: 7,     // 🟠 Charge moyenne
-    HEAVY: 10,     // 🔴 Surcharge
+    LIGHT: 2,      // 🟢 1-2 devoirs simples ou moins
+    MEDIUM: 4,     // 🟠 3-4 devoirs ou 1-2 évaluations
+    HEAVY: 6,      // 🔴 2+ évaluations ou 5+ devoirs
     // > HEAVY = ❌ Critique
   },
   weekly: {
-    LIGHT: 15,     // 🟢 Semaine légère
-    MEDIUM: 25,    // 🟠 Semaine moyenne
-    HEAVY: 35,     // 🔴 Semaine chargée
+    LIGHT: 8,      // 🟢 Semaine légère
+    MEDIUM: 15,    // 🟠 Semaine moyenne
+    HEAVY: 20,     // 🔴 Semaine chargée
     // > HEAVY = ❌ Semaine critique
   },
-  // DST rules
+  // DST rules (kept for future use)
   dst: {
-    MAX_PER_WEEK: 1,           // Max 1 DST lourd par semaine
-    MIN_WEEKS_BETWEEN: 2,      // Au moins 2 semaines entre 2 DST lourds
-    MAX_CONSECUTIVE_SATURDAYS: 2, // Pas plus de 2 samedis d'affilée avec DST
+    MAX_PER_WEEK: 1,
+    MIN_WEEKS_BETWEEN: 2,
+    MAX_CONSECUTIVE_SATURDAYS: 2,
   },
 };
 
@@ -118,21 +118,22 @@ export function getWeekNumber(date) {
 
 /**
  * Calculate the weight of a single assignment
- * @param {Object} assignment - Assignment object with type and weight properties
+ * Simple system:
+ * - Homework = 1 point
+ * - Evaluation (test) = 3 points
+ * @param {Object} assignment - Assignment object with type property
  * @returns {number} - Calculated weight
  */
 export function getAssignmentWeight(assignment) {
-  const { type, weight } = assignment;
+  const { type } = assignment;
 
-  if (type === 'homework') {
-    return WORKLOAD_WEIGHTS.homework[weight] || WORKLOAD_WEIGHTS.homework.MEDIUM;
+  // Évaluation = 3 points
+  if (type === 'test') {
+    return 3;
   }
 
-  if (type === 'test' || type === 'dst' || type === 'control') {
-    return WORKLOAD_WEIGHTS.test[weight] || WORKLOAD_WEIGHTS.test.CONTROL;
-  }
-
-  return 1; // Default weight
+  // Devoir = 1 point
+  return 1;
 }
 
 /**

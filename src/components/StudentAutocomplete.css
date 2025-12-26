@@ -1,0 +1,79 @@
+/**
+ * StudentAutocomplete - Instagram-style dropdown CSS
+ */
+
+.student-autocomplete {
+    position: relative;
+    flex: 1;
+}
+
+.student-autocomplete input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    padding: 6px 4px;
+    font-size: 0.85rem;
+    outline: none;
+}
+
+.student-autocomplete input:focus {
+    background: #e3f2fd;
+}
+
+/* Dropdown */
+.autocomplete-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    max-height: 250px;
+    overflow-y: auto;
+    margin-top: 4px;
+}
+
+.autocomplete-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: background 0.1s;
+}
+
+.autocomplete-item:hover,
+.autocomplete-item.selected {
+    background: #f0f7ff;
+}
+
+.item-class {
+    background: #3b82f6;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.item-name {
+    font-size: 0.9rem;
+    color: #1a1a1a;
+    font-weight: 500;
+}
+
+.autocomplete-empty,
+.autocomplete-loading {
+    padding: 12px;
+    text-align: center;
+    color: #999;
+    font-size: 0.85rem;
+}
+
+.autocomplete-loading {
+    color: #3b82f6;
+}

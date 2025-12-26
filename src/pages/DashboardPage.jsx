@@ -6,12 +6,12 @@
  */
 
 import { useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useWorkload } from '../contexts/WorkloadContext';
 import { LoadIndicator, LoadProgressBar } from '../components/ui/LoadIndicator';
 import { AssignmentCard, AssignmentCardSkeleton } from '../components/ui/AssignmentCard';
 import { DailyWorkloadChart, WeeklyWorkloadChart, SubjectDistributionChart } from '../components/charts/WorkloadChart';
-import { generateMockDailyStats, generateMockWeeklyStats } from '../data/mockData';
 import './DashboardPage.css';
 
 export function DashboardPage() {
@@ -33,20 +33,99 @@ export function DashboardPage() {
         return 'Bonsoir';
     }, []);
 
-    // Filter upcoming assignments
-    const upcomingAssignments = useMemo(() => {
+    // Generate daily data from actual assignments (skip empty days, look further ahead)
+    const dailyChartData = useMemo(() => {
+        const dayNames = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        return assignments
-            .filter(a => new Date(a.dueDate) >= today && !a.done)
-            .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
-            .slice(0, 5);
+        // Get all unique dates from assignments that are today or in the future
+        const dateMap = {};
+
+        assignments.forEach(a => {
+            if (!a.dueDate) return;
+            try {
+                const dueDate = new Date(a.dueDate);
+                if (isNaN(dueDate.getTime())) return;
+
+                // Only include today and future dates
+                const dueDateNorm = new Date(dueDate);
+                dueDateNorm.setHours(0, 0, 0, 0);
+                if (dueDateNorm < today) return;
+
+                const dateStr = dueDate.toISOString().split('T')[0];
+
+                if (!dateMap[dateStr]) {
+                    dateMap[dateStr] = {
+                        day: dayNames[dueDate.getDay()],
+                        date: dateStr,
+                        score: 0,
+                        count: 0,
+                        assignments: []
+                    };
+                }
+
+                dateMap[dateStr].count++;
+                dateMap[dateStr].score += (a.type === 'test' ? 3 : 1);
+                dateMap[dateStr].assignments.push(a);
+            } catch {
+                // Skip invalid dates
+            }
+        });
+
+        // Convert to array and sort by date, limit to 7 days with assignments
+        return Object.values(dateMap)
+            .sort((a, b) => new Date(a.date) - new Date(b.date))
+            .slice(0, 7);
     }, [assignments]);
 
-    // Generate chart data
-    const dailyChartData = useMemo(() => generateMockDailyStats(), []);
-    const weeklyChartData = useMemo(() => generateMockWeeklyStats(), []);
+    const weeklyChartData = useMemo(() => {
+        const weeks = [];
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        for (let i = 0; i < 4; i++) {
+            const weekStart = new Date(today);
+            weekStart.setDate(weekStart.getDate() + (i * 7));
+            const weekEnd = new Date(weekStart);
+            weekEnd.setDate(weekEnd.getDate() + 6);
+
+            const weekAssignments = assignments.filter(a => {
+                if (!a.dueDate) return false;
+                const dueDate = new Date(a.dueDate);
+                if (isNaN(dueDate.getTime())) return false;
+                return dueDate >= weekStart && dueDate <= weekEnd;
+            });
+
+            // Calculate score: évaluation = 3pts, devoir = 1pt
+            let score = weekAssignments.reduce((total, a) => {
+                return total + (a.type === 'test' ? 3 : 1);
+            }, 0);
+
+            // Count tests
+            const testCount = weekAssignments.filter(a => a.type === 'test').length;
+            const homeworkCount = weekAssignments.length - testCount;
+
+            // Format week label: "6-12 janv."
+            const formatShortDate = (d) => d.getDate();
+            const formatMonth = (d) => d.toLocaleDateString('fr-FR', { month: 'short' });
+            const weekLabel = `${formatShortDate(weekStart)}-${formatShortDate(weekEnd)} ${formatMonth(weekEnd)}`;
+
+            weeks.push({
+                week: weekLabel,
+                weekNumber: i + 1,
+                score,
+                count: weekAssignments.length,
+                testCount,
+                homeworkCount,
+                isCurrent: i === 0,
+                startDate: weekStart.toISOString().split('T')[0],
+                endDate: weekEnd.toISOString().split('T')[0],
+            });
+        }
+
+        return weeks;
+    }, [assignments]);
 
     return (
         <div className="dashboard">
@@ -156,26 +235,92 @@ export function DashboardPage() {
                         <h2 className="dashboard__section-title">
                             <span>📝</span> Prochains devoirs
                         </h2>
-                        <a href="/assignments" className="dashboard__section-link">
+                        <Link to="/assignments" className="dashboard__section-link">
                             Voir tout →
-                        </a>
+                        </Link>
                     </div>
 
-                    <div className="dashboard__assignments-list">
+                    <div className="dashboard__daily-tree">
                         {isLoading ? (
                             <>
                                 <AssignmentCardSkeleton />
                                 <AssignmentCardSkeleton />
-                                <AssignmentCardSkeleton />
                             </>
-                        ) : upcomingAssignments.length > 0 ? (
-                            upcomingAssignments.map(assignment => (
-                                <AssignmentCard
-                                    key={assignment.id}
-                                    assignment={assignment}
-                                    showClass={userType === 'teacher'}
-                                />
-                            ))
+                        ) : dailyChartData.length > 0 ? (
+                            dailyChartData.map(day => {
+                                // Group assignments by subject for this day
+                                const bySubject = (day.assignments || []).reduce((acc, a) => {
+                                    const subject = a.subject || 'Autre';
+                                    if (!acc[subject]) acc[subject] = [];
+                                    acc[subject].push(a);
+                                    return acc;
+                                }, {});
+
+                                // Get status based on score
+                                const getStatus = (score) => {
+                                    if (score <= 2) return 'light';
+                                    if (score <= 4) return 'medium';
+                                    if (score <= 6) return 'heavy';
+                                    return 'critical';
+                                };
+
+                                const status = getStatus(day.score);
+                                const statusLabels = {
+                                    light: 'Léger',
+                                    medium: 'Modéré',
+                                    heavy: 'Chargé',
+                                    critical: 'Critique'
+                                };
+
+                                return (
+                                    <div key={day.date} className={`day-tree day-tree--${status}`}>
+                                        <div className="day-tree__header">
+                                            <div className="day-tree__date">
+                                                <span className="day-tree__day-name">{day.day}</span>
+                                                <span className="day-tree__full-date">
+                                                    {new Date(day.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
+                                                </span>
+                                            </div>
+                                            <div className="day-tree__stats">
+                                                <span className={`day-tree__status day-tree__status--${status}`}>
+                                                    {statusLabels[status]}
+                                                </span>
+                                                <span className="day-tree__score">{day.score} pts</span>
+                                            </div>
+                                        </div>
+
+                                        <div className="day-tree__subjects">
+                                            {Object.entries(bySubject).map(([subject, subjectAssignments]) => (
+                                                <div key={subject} className="subject-branch">
+                                                    <div className="subject-branch__header">
+                                                        <span className="subject-branch__icon">📚</span>
+                                                        <span className="subject-branch__name">{subject}</span>
+                                                        <span className="subject-branch__count">
+                                                            {subjectAssignments.length} {subjectAssignments.length > 1 ? 'travaux' : 'travail'}
+                                                        </span>
+                                                    </div>
+                                                    <div className="subject-branch__items">
+                                                        {subjectAssignments.map(a => (
+                                                            <div
+                                                                key={a.id}
+                                                                className={`assignment-leaf ${a.type === 'test' ? 'assignment-leaf--test' : ''} ${a.done ? 'assignment-leaf--done' : ''}`}
+                                                            >
+                                                                <span className="assignment-leaf__icon">
+                                                                    {a.type === 'test' ? '📋' : '📝'}
+                                                                </span>
+                                                                <span className="assignment-leaf__type">
+                                                                    {a.type === 'test' ? 'Évaluation' : 'Devoir'}
+                                                                </span>
+                                                                {a.done && <span className="assignment-leaf__done">✓</span>}
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                );
+                            })
                         ) : (
                             <div className="dashboard__empty">
                                 <span>🎉</span>

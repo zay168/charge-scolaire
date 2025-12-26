@@ -44,10 +44,10 @@ const COLORS = {
     primaryLight: 'hsla(220, 60%, 50%, 0.1)',
 };
 
-// Thresholds for color coding
+// Thresholds for color coding (new simplified system)
 const THRESHOLDS = {
-    daily: { light: 4, medium: 7, heavy: 10 },
-    weekly: { light: 15, medium: 25, heavy: 35 },
+    daily: { light: 2, medium: 4, heavy: 6 },
+    weekly: { light: 8, medium: 15, heavy: 20 },
 };
 
 /**
@@ -70,10 +70,17 @@ export function DailyWorkloadChart({
     showLegend = false,
 }) {
     const chartData = useMemo(() => ({
-        labels: data.map(d => d.dayName || d.date),
+        labels: data.map(d => {
+            // Format date nicely: "Lun 6"
+            if (d.day && d.date) {
+                const dateObj = new Date(d.date);
+                return `${d.day} ${dateObj.getDate()}`;
+            }
+            return d.dayName || d.day || d.date;
+        }),
         datasets: [
             {
-                label: 'Charge',
+                label: 'Points de charge',
                 data: data.map(d => d.score),
                 backgroundColor: data.map(d =>
                     d.isToday
@@ -87,10 +94,12 @@ export function DailyWorkloadChart({
                 ),
                 borderWidth: 1,
                 borderRadius: 6,
-                barThickness: 20,
+                barThickness: 28,
             },
         ],
     }), [data]);
+
+    const maxScore = Math.max(12, ...data.map(d => d.score || 0));
 
     const options = useMemo(() => ({
         responsive: true,
@@ -98,6 +107,9 @@ export function DailyWorkloadChart({
         plugins: {
             legend: {
                 display: showLegend,
+            },
+            title: {
+                display: false,
             },
             tooltip: {
                 backgroundColor: 'hsl(220, 20%, 15%)',
@@ -108,42 +120,102 @@ export function DailyWorkloadChart({
                 cornerRadius: 8,
                 padding: 12,
                 callbacks: {
+                    title: (context) => {
+                        const idx = context[0].dataIndex;
+                        const d = data[idx];
+                        if (d.date) {
+                            return new Date(d.date).toLocaleDateString('fr-FR', {
+                                weekday: 'long',
+                                day: 'numeric',
+                                month: 'long'
+                            });
+                        }
+                        return context[0].label;
+                    },
                     label: (context) => {
                         const score = context.raw;
+                        const count = data[context.dataIndex]?.count || 0;
                         let status = 'Léger';
                         if (score > THRESHOLDS.daily.heavy) status = 'Critique';
                         else if (score > THRESHOLDS.daily.medium) status = 'Chargé';
                         else if (score > THRESHOLDS.daily.light) status = 'Modéré';
-                        return `Score: ${score} (${status})`;
+                        return [
+                            `${score} points (${status})`,
+                            `${count} ${count > 1 ? 'travaux' : 'travail'}`
+                        ];
                     },
                 },
             },
         },
         scales: {
             x: {
+                title: {
+                    display: true,
+                    text: 'Jour',
+                    color: 'hsl(220, 10%, 45%)',
+                    font: {
+                        size: 11,
+                        weight: '600',
+                    },
+                    padding: { top: 8 },
+                },
                 grid: {
                     display: false,
                 },
                 ticks: {
-                    color: 'hsl(220, 10%, 50%)',
+                    color: 'hsl(220, 10%, 40%)',
                     font: {
                         size: 11,
+                        weight: '500',
                     },
                 },
             },
             y: {
+                title: {
+                    display: true,
+                    text: 'Points de charge',
+                    color: 'hsl(220, 10%, 45%)',
+                    font: {
+                        size: 11,
+                        weight: '600',
+                    },
+                    padding: { bottom: 8 },
+                },
                 beginAtZero: true,
-                max: Math.max(15, ...data.map(d => d.score)) + 2,
+                suggestedMax: maxScore + 2,
                 grid: {
-                    color: 'hsl(220, 10%, 92%)',
+                    color: (ctx) => {
+                        // Highlight threshold lines
+                        if (ctx.tick.value === THRESHOLDS.daily.light) return 'hsla(142, 70%, 45%, 0.3)';
+                        if (ctx.tick.value === THRESHOLDS.daily.medium) return 'hsla(42, 90%, 50%, 0.3)';
+                        if (ctx.tick.value === THRESHOLDS.daily.heavy) return 'hsla(4, 85%, 55%, 0.3)';
+                        return 'hsl(220, 10%, 92%)';
+                    },
+                    lineWidth: (ctx) => {
+                        // Thicker threshold lines
+                        if ([THRESHOLDS.daily.light, THRESHOLDS.daily.medium, THRESHOLDS.daily.heavy].includes(ctx.tick.value)) {
+                            return 2;
+                        }
+                        return 1;
+                    },
                 },
                 ticks: {
-                    color: 'hsl(220, 10%, 50%)',
-                    stepSize: 5,
+                    color: 'hsl(220, 10%, 40%)',
+                    stepSize: 2,
+                    callback: (value) => {
+                        // Add labels at thresholds
+                        if (value === THRESHOLDS.daily.light) return `${value} (léger)`;
+                        if (value === THRESHOLDS.daily.medium) return `${value} (modéré)`;
+                        if (value === THRESHOLDS.daily.heavy) return `${value} (chargé)`;
+                        return value;
+                    },
+                    font: {
+                        size: 10,
+                    },
                 },
             },
         },
-    }), [data, showLegend]);
+    }), [data, showLegend, maxScore]);
 
     return (
         <div className="workload-chart" style={{ height }}>
@@ -153,7 +225,7 @@ export function DailyWorkloadChart({
 }
 
 /**
- * Weekly Workload Line Chart
+ * Weekly Workload Bar Chart (changed from line to bar for clarity)
  */
 export function WeeklyWorkloadChart({
     data,
@@ -161,27 +233,29 @@ export function WeeklyWorkloadChart({
     showLegend = false,
 }) {
     const chartData = useMemo(() => ({
-        labels: data.map(d => d.week || `S${d.weekNumber}`),
+        labels: data.map(d => d.week || `Semaine ${d.weekNumber}`),
         datasets: [
             {
-                label: 'Charge hebdomadaire',
+                label: 'Points de charge',
                 data: data.map(d => d.score),
-                borderColor: COLORS.primary,
-                backgroundColor: COLORS.primaryLight,
-                fill: true,
-                tension: 0.4,
-                pointBackgroundColor: data.map(d =>
-                    d.isCurrent ? COLORS.primary : 'white'
+                backgroundColor: data.map(d =>
+                    d.isCurrent
+                        ? COLORS.primary
+                        : getScoreColor(d.score, 'weekly')
                 ),
-                pointBorderColor: data.map(d =>
-                    getScoreColor(d.score, 'weekly')
+                borderColor: data.map(d =>
+                    d.isCurrent
+                        ? COLORS.primary
+                        : getScoreColor(d.score, 'weekly')
                 ),
-                pointBorderWidth: 2,
-                pointRadius: data.map(d => d.isCurrent ? 6 : 4),
-                pointHoverRadius: 8,
+                borderWidth: 1,
+                borderRadius: 6,
+                barThickness: 40,
             },
         ],
     }), [data]);
+
+    const maxScore = Math.max(25, ...data.map(d => d.score || 0));
 
     const options = useMemo(() => ({
         responsive: true,
@@ -199,41 +273,106 @@ export function WeeklyWorkloadChart({
                 cornerRadius: 8,
                 padding: 12,
                 callbacks: {
+                    title: (context) => {
+                        const idx = context[0].dataIndex;
+                        const d = data[idx];
+                        if (d.isCurrent) return '📍 Cette semaine';
+                        return `Semaine du ${d.week}`;
+                    },
                     label: (context) => {
                         const score = context.raw;
-                        const count = data[context.dataIndex]?.count || 0;
-                        return [
-                            `Score: ${score}`,
-                            `${count} ${count > 1 ? 'devoirs' : 'devoir'}`,
+                        const d = data[context.dataIndex];
+                        let status = 'Légère';
+                        if (score > THRESHOLDS.weekly.heavy) status = 'Critique';
+                        else if (score > THRESHOLDS.weekly.medium) status = 'Chargée';
+                        else if (score > THRESHOLDS.weekly.light) status = 'Modérée';
+
+                        const lines = [
+                            `${score} points (${status})`,
                         ];
+
+                        if (d.homeworkCount !== undefined) {
+                            lines.push(`📝 ${d.homeworkCount} devoir${d.homeworkCount > 1 ? 's' : ''}`);
+                        }
+                        if (d.testCount !== undefined && d.testCount > 0) {
+                            lines.push(`📋 ${d.testCount} évaluation${d.testCount > 1 ? 's' : ''}`);
+                        }
+
+                        return lines;
                     },
                 },
             },
         },
         scales: {
             x: {
+                title: {
+                    display: true,
+                    text: 'Semaine',
+                    color: 'hsl(220, 10%, 45%)',
+                    font: {
+                        size: 11,
+                        weight: '600',
+                    },
+                    padding: { top: 8 },
+                },
                 grid: {
                     display: false,
                 },
                 ticks: {
-                    color: 'hsl(220, 10%, 50%)',
+                    color: 'hsl(220, 10%, 40%)',
+                    font: {
+                        size: 10,
+                        weight: '500',
+                    },
                 },
             },
             y: {
+                title: {
+                    display: true,
+                    text: 'Points de charge',
+                    color: 'hsl(220, 10%, 45%)',
+                    font: {
+                        size: 11,
+                        weight: '600',
+                    },
+                    padding: { bottom: 8 },
+                },
                 beginAtZero: true,
+                suggestedMax: maxScore + 5,
                 grid: {
-                    color: 'hsl(220, 10%, 92%)',
+                    color: (ctx) => {
+                        if (ctx.tick.value === THRESHOLDS.weekly.light) return 'hsla(142, 70%, 45%, 0.3)';
+                        if (ctx.tick.value === THRESHOLDS.weekly.medium) return 'hsla(42, 90%, 50%, 0.3)';
+                        if (ctx.tick.value === THRESHOLDS.weekly.heavy) return 'hsla(4, 85%, 55%, 0.3)';
+                        return 'hsl(220, 10%, 92%)';
+                    },
+                    lineWidth: (ctx) => {
+                        if ([THRESHOLDS.weekly.light, THRESHOLDS.weekly.medium, THRESHOLDS.weekly.heavy].includes(ctx.tick.value)) {
+                            return 2;
+                        }
+                        return 1;
+                    },
                 },
                 ticks: {
-                    color: 'hsl(220, 10%, 50%)',
+                    color: 'hsl(220, 10%, 40%)',
+                    stepSize: 5,
+                    callback: (value) => {
+                        if (value === THRESHOLDS.weekly.light) return `${value} (léger)`;
+                        if (value === THRESHOLDS.weekly.medium) return `${value} (modéré)`;
+                        if (value === THRESHOLDS.weekly.heavy) return `${value} (chargé)`;
+                        return value;
+                    },
+                    font: {
+                        size: 10,
+                    },
                 },
             },
         },
-    }), [data, showLegend]);
+    }), [data, showLegend, maxScore]);
 
     return (
         <div className="workload-chart" style={{ height }}>
-            <Line data={chartData} options={options} />
+            <Bar data={chartData} options={options} />
         </div>
     );
 }

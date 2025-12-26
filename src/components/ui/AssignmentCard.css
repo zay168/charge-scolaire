@@ -168,13 +168,22 @@
     font-weight: var(--font-semibold);
 }
 
-.assignment-card__weight {
+.assignment-card__type {
     margin-left: auto;
     padding: var(--space-1) var(--space-2);
-    background: var(--color-neutral-100);
-    color: var(--color-neutral-600);
     border-radius: var(--radius-sm);
     font-weight: var(--font-medium);
+    font-size: var(--text-xs);
+}
+
+.assignment-card__type--homework {
+    background: var(--color-neutral-100);
+    color: var(--color-neutral-600);
+}
+
+.assignment-card__type--test {
+    background: hsl(4, 85%, 95%);
+    color: hsl(4, 85%, 45%);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════

@@ -418,17 +418,35 @@ export class MockEcoleDirecteClient {
         }
 
         this.token = 'mock-token-' + Date.now();
-        this.account = {
-            id: 12345,
-            type: 'E',
-            firstName: 'Jean',
-            lastName: 'Dupont',
-            email: 'jean.dupont@email.com',
-            classe: 'Terminale S',
-            classeId: 'TS1',
-            school: 'Lycée Demo',
-            schoolId: 1,
-        };
+
+        // Guest mode - like in EDP (guest/secret)
+        if (username === 'guest' && password === 'secret') {
+            this.account = {
+                id: 1,
+                type: 'E',
+                firstName: 'Invité',
+                lastName: '',
+                email: 'guest@charge-scolaire.fr',
+                photo: null,
+                classe: 'Mode Démo',
+                classeId: 'DEMO',
+                school: 'Lycée de Démonstration',
+                schoolId: 0,
+            };
+        } else {
+            // Regular demo user
+            this.account = {
+                id: 12345,
+                type: 'E',
+                firstName: 'Jean',
+                lastName: 'Dupont',
+                email: 'jean.dupont@email.com',
+                classe: 'Terminale S1',
+                classeId: 'TS1',
+                school: 'Lycée Demo',
+                schoolId: 1,
+            };
+        }
 
         return {
             token: this.token,
@@ -579,9 +597,31 @@ export class MockEcoleDirecteClient {
 export const mockEcoleDirecteClient = new MockEcoleDirecteClient();
 
 // ─────────────────────────────────────────────────────────────────────────────
-// EXPORT DEFAULT CLIENT (use mock in development)
+// EXPORT DEFAULT CLIENT
+// Based on configuration and environment
 // ─────────────────────────────────────────────────────────────────────────────
 
-const isDev = import.meta.env.DEV;
+import { getApiMode } from './config.js';
+import { realEcoleDirecteClient } from './realEcoleDirecte.js';
 
-export default isDev ? mockEcoleDirecteClient : ecoleDirecteClient;
+/**
+ * Get the appropriate client based on configuration:
+ * - In mock mode: Uses MockEcoleDirecteClient (demo/development)
+ * - In real mode: Uses RealEcoleDirecteClient (actual École Directe API)
+ */
+function getClient() {
+    const mode = getApiMode();
+
+    if (mode === 'real') {
+        console.log('📡 Using REAL École Directe API');
+        return realEcoleDirecteClient;
+    }
+
+    console.log('🎭 Using MOCK École Directe client');
+    return mockEcoleDirecteClient;
+}
+
+const ecoleDirecteClientDefault = getClient();
+
+export default ecoleDirecteClientDefault;
+

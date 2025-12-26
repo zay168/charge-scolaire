@@ -29,7 +29,7 @@ const WorkloadContext = createContext(null);
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function WorkloadProvider({ children }) {
-    const { isAuthenticated, userType, user } = useAuth();
+    const { isAuthenticated, userType, user, triggerRelogin } = useAuth();
 
     // State
     const [assignments, setAssignments] = useState([]);
@@ -51,48 +51,127 @@ export function WorkloadProvider({ children }) {
         setError(null);
 
         try {
-            // In development, use mock data
-            if (import.meta.env.DEV) {
-                await new Promise(resolve => setTimeout(resolve, 500));
+            if (userType === 'student') {
+                // Fetch real data from the API
+                let allAssignments = [];
 
-                if (userType === 'student') {
-                    // Students see their own class data
-                    const homework = await ecoleDirecteClient.getHomework();
-                    const tests = await ecoleDirecteClient.getTests();
 
-                    setAssignments([...homework, ...tests]);
-                    setDsts(tests.filter(t => t.type === 'dst'));
-                } else {
-                    // Teachers see aggregated data for their classes
-                    const teacherClasses = user?.classes || ['TS1', 'TES2'];
-                    const filteredAssignments = mockAssignments.filter(
-                        a => teacherClasses.includes(a.classId)
+                // Fetch homework with details
+                try {
+                    // First get overview of all homework (contains dates)
+                    const overview = await ecoleDirecteClient.getHomework();
+                    console.log('📚 Homework overview:', overview);
+
+                    if (Array.isArray(overview) && overview.length > 0) {
+                        // Get unique dates (ALL of them, no limiting)
+                        const uniqueDates = [...new Set(overview.map(h => h.dueDate).filter(Boolean))].sort();
+                        console.log('📅 ALL dates with homework from API:', uniqueDates);
+                        console.log('📅 Number of unique dates:', uniqueDates.length);
+
+                        // Fetch details for each date
+                        for (const date of uniqueDates) {
+                            try {
+                                const detailed = await ecoleDirecteClient.getHomework(date);
+                                if (Array.isArray(detailed)) {
+                                    allAssignments.push(...detailed);
+                                }
+                            } catch (err) {
+                                console.warn(`Failed to fetch details for ${date}:`, err);
+                            }
+                        }
+
+                        // If no detailed fetch worked, use overview
+                        if (allAssignments.length === 0) {
+                            allAssignments = [...overview];
+                        }
+                    }
+
+                    console.log('📝 Final assignments:', allAssignments);
+                } catch (homeworkErr) {
+                    console.warn('Failed to fetch homework:', homeworkErr);
+                    // If auth error (401 or "Non authentifié"), trigger relogin modal
+                    const errorMessage = homeworkErr?.message || '';
+                    const isAuthError = errorMessage.toLowerCase().includes('authentifié') ||
+                        errorMessage.toLowerCase().includes('non autorisé') ||
+                        homeworkErr?.status === 401 ||
+                        homeworkErr?.code === 401;
+
+                    if (isAuthError && triggerRelogin) {
+                        triggerRelogin();
+                    }
+                }
+
+                // Fetch tests (may not be available in all implementations)
+                try {
+                    if (typeof ecoleDirecteClient.getTests === 'function') {
+                        const tests = await ecoleDirecteClient.getTests();
+                        if (Array.isArray(tests)) {
+                            // Merge tests into assignments if not already present
+                            const assignmentIds = new Set(allAssignments.map(a => a.id));
+                            tests.forEach(test => {
+                                if (!assignmentIds.has(test.id)) {
+                                    allAssignments.push(test);
+                                }
+                            });
+                        }
+                    }
+                } catch (testsErr) {
+                    console.warn('Failed to fetch tests:', testsErr);
+                }
+
+                // Extract DSTs from assignments
+                const dstList = allAssignments.filter(a =>
+                    a.type === 'dst' ||
+                    a.type === 'test' ||
+                    a.weight === 'DST' ||
+                    a.weight === 'CONTROL'
+                );
+
+                setAssignments(allAssignments);
+                setDsts(dstList);
+
+                // Sync workload to Supabase (for teachers to see)
+                try {
+                    const { syncStudentWorkload } = await import('../services/workloadService');
+                    await syncStudentWorkload(
+                        {
+                            edId: user?.edId || user?.id?.toString(),
+                            className: user?.classe || user?.className || user?.class || 'Unknown'
+                        },
+                        allAssignments
                     );
-                    const filteredDSTs = mockDSTs.filter(
-                        d => d.classes.some(c => teacherClasses.includes(c))
-                    );
-
-                    setAssignments(filteredAssignments);
-                    setDsts(filteredDSTs);
-                    setClasses(mockClasses.filter(c => teacherClasses.includes(c.id)));
+                    console.log('📊 Workload synced to Supabase');
+                } catch (syncErr) {
+                    console.warn('Failed to sync workload:', syncErr);
+                    // Non-critical, continue anyway
                 }
             } else {
-                // Production: fetch from École Directe
-                const homework = await ecoleDirecteClient.getHomework();
-                const tests = await ecoleDirecteClient.getTests();
+                // Teachers: use mock data for now
+                const teacherClasses = user?.classes || ['TS1', 'TES2'];
+                const filteredAssignments = mockAssignments.filter(
+                    a => teacherClasses.includes(a.classId)
+                );
+                const filteredDSTs = mockDSTs.filter(
+                    d => d.classes.some(c => teacherClasses.includes(c))
+                );
 
-                setAssignments([...homework, ...tests]);
-                setDsts(tests.filter(t => t.type === 'dst'));
+                setAssignments(filteredAssignments);
+                setDsts(filteredDSTs);
+                setClasses(mockClasses.filter(c => teacherClasses.includes(c.id)));
             }
 
             setLastSync(new Date());
         } catch (err) {
             console.error('Failed to fetch workload data:', err);
             setError('Impossible de récupérer les données');
+
+            // Fallback to empty arrays to prevent crashes
+            setAssignments([]);
+            setDsts([]);
         } finally {
             setIsLoading(false);
         }
-    }, [isAuthenticated, userType, user]);
+    }, [isAuthenticated, userType, user, triggerRelogin]);
 
     // Auto-fetch on auth change
     useEffect(() => {
@@ -208,6 +287,15 @@ export function WorkloadProvider({ children }) {
         return grouped;
     }, [assignments]);
 
+    /**
+     * Update assignment done status (optimistic update)
+     */
+    const updateAssignmentDone = useCallback((assignmentId, done) => {
+        setAssignments(prev => prev.map(a =>
+            a.id === assignmentId ? { ...a, done } : a
+        ));
+    }, []);
+
     // ─────────────────────────────────────────────────────────────────────────────
     // CONTEXT VALUE
     // ─────────────────────────────────────────────────────────────────────────────
@@ -233,6 +321,7 @@ export function WorkloadProvider({ children }) {
         checkConflicts,
         addAssignment,
         removeAssignment,
+        updateAssignmentDone,
         getWorkloadForDate,
         getWorkloadForWeek,
         getAssignmentsByDate,

@@ -2,23 +2,46 @@
  * ═══════════════════════════════════════════════════════════════════════════
  * LOGIN PAGE
  * Authentication page for students and teachers
+ * Inspired by École Directe Plus connection flow
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth, USER_TYPES } from '../contexts/AuthContext';
+import QCMModal from '../components/auth/QCMModal';
 import './LoginPage.css';
 
 export function LoginPage() {
     const navigate = useNavigate();
-    const { loginAsStudent, loginAsTeacher, isLoading, error, clearError } = useAuth();
+    const {
+        loginAsStudent,
+        loginAsTeacher,
+        isLoading,
+        error,
+        clearError,
+        isAuthenticated,
+        qcmRequired,
+        qcmData,
+        qcmLoading,
+        answerQCM,
+        cancelQCM,
+    } = useAuth();
 
     const [loginType, setLoginType] = useState(USER_TYPES.STUDENT);
     const [formData, setFormData] = useState({
         username: '',
         password: '',
     });
+    const [keepLoggedIn, setKeepLoggedIn] = useState(false);
+    const [showTooltip, setShowTooltip] = useState(false);
+
+    // Redirect if already authenticated
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate('/');
+        }
+    }, [isAuthenticated, navigate]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -35,9 +58,9 @@ export function LoginPage() {
 
         let result;
         if (loginType === USER_TYPES.STUDENT) {
-            result = await loginAsStudent(username, password);
+            result = await loginAsStudent(username, password, keepLoggedIn);
         } else {
-            result = await loginAsTeacher(username, password);
+            result = await loginAsTeacher(username, password, keepLoggedIn);
         }
 
         if (result.success) {
@@ -169,6 +192,30 @@ export function LoginPage() {
                                 />
                             </div>
 
+                            {/* Keep logged in option with tooltip */}
+                            <div className="login-card__options">
+                                <div
+                                    className="login-card__keep-logged"
+                                    onMouseEnter={() => setShowTooltip(true)}
+                                    onMouseLeave={() => setShowTooltip(false)}
+                                >
+                                    <input
+                                        type="checkbox"
+                                        id="keepLoggedIn"
+                                        checked={keepLoggedIn}
+                                        onChange={(e) => setKeepLoggedIn(e.target.checked)}
+                                    />
+                                    <label htmlFor="keepLoggedIn">Rester connecté</label>
+
+                                    {showTooltip && (
+                                        <div className="login-card__tooltip">
+                                            ⚠️ Cette fonctionnalité peut présenter des risques,
+                                            notamment si vous êtes infecté par un logiciel malveillant.
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
                             <button
                                 type="submit"
                                 className="btn btn--primary login-card__submit"
@@ -177,27 +224,67 @@ export function LoginPage() {
                                 {isLoading ? 'Connexion...' : 'Se connecter'}
                             </button>
 
+                            {/* Guest login button */}
+                            <button
+                                type="button"
+                                className="btn btn--ghost login-card__guest"
+                                onClick={async () => {
+                                    const result = await loginAsStudent('guest', 'secret');
+                                    if (result.success) {
+                                        navigate('/');
+                                    }
+                                }}
+                                disabled={isLoading}
+                            >
+                                🎭 Essayer en mode invité
+                            </button>
+
                             {loginType === USER_TYPES.TEACHER && (
-                                <p className="login-card__demo-hint">
-                                    <strong>Demo:</strong> demo@prof.fr / demo
-                                </p>
+                                <div className="login-card__teacher-link">
+                                    <p className="login-card__demo-hint">
+                                        <strong>💡 Demo professeur :</strong> demo@prof.fr / demo
+                                    </p>
+                                    <a href="/teacher/login" className="login-card__alt-login">
+                                        👨‍🏫 Accéder à l'espace professeur Supabase →
+                                    </a>
+                                </div>
                             )}
 
                             {loginType === USER_TYPES.STUDENT && (
                                 <p className="login-card__demo-hint">
-                                    <strong>Demo:</strong> Utilisez n'importe quels identifiants
+                                    <strong>💡 Note :</strong> En mode démo, utilisez n'importe quels identifiants
+                                    ou connectez-vous en mode invité.
                                 </p>
                             )}
                         </form>
 
                         <div className="login-card__footer">
                             <p className="login-card__privacy">
-                                🔒 Vos identifiants ne sont jamais stockés
+                                🔒 Vos identifiants ne sont jamais stockés sur nos serveurs
+                            </p>
+                            <p className="login-card__disclaimer">
+                                Service non-affilié à Aplim / EcoleDirecte
                             </p>
                         </div>
                     </div>
                 </section>
             </main>
+
+            {/* QCM Security Modal */}
+            {qcmRequired && qcmData && (
+                <QCMModal
+                    question={qcmData.question}
+                    propositions={qcmData.propositions}
+                    onAnswer={async (answerIndex) => {
+                        const result = await answerQCM(answerIndex);
+                        if (result.success) {
+                            navigate('/');
+                        }
+                    }}
+                    onCancel={cancelQCM}
+                    isLoading={qcmLoading}
+                />
+            )}
         </div>
     );
 }

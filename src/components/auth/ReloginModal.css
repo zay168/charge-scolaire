@@ -1,0 +1,170 @@
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * RELOGIN MODAL STYLES
+ * ═══════════════════════════════════════════════════════════════════════════
+ */
+
+.relogin-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.relogin-modal {
+    background: var(--bg-card, #fff);
+    border-radius: 20px;
+    padding: 32px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.relogin-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.relogin-icon {
+    font-size: 48px;
+    display: block;
+    margin-bottom: 16px;
+}
+
+.relogin-header h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary, #1a1a1a);
+    margin: 0 0 8px 0;
+}
+
+.relogin-header p {
+    font-size: 14px;
+    color: var(--text-secondary, #666);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.relogin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.relogin-error {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #dc2626;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.relogin-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.relogin-field label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary, #666);
+}
+
+.relogin-field input {
+    padding: 12px 16px;
+    border: 1px solid var(--border-color, #e5e5e5);
+    border-radius: 10px;
+    font-size: 15px;
+    background: var(--bg-secondary, #f8f8f8);
+    color: var(--text-primary, #1a1a1a);
+    transition: 0.15s;
+}
+
+.relogin-field input:focus {
+    outline: none;
+    border-color: var(--color-primary, #3b82f6);
+    background: var(--bg-card, #fff);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.relogin-field input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.relogin-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.relogin-btn {
+    padding: 14px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.15s;
+}
+
+.relogin-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.relogin-btn--primary {
+    background: linear-gradient(135deg, var(--color-primary, #3b82f6), var(--color-primary-dark, #2563eb));
+    color: white;
+}
+
+.relogin-btn--primary:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+.relogin-btn--secondary {
+    background: transparent;
+    color: var(--text-secondary, #666);
+    border: 1px solid var(--border-color, #e5e5e5);
+}
+
+.relogin-btn--secondary:hover:not(:disabled) {
+    background: var(--bg-secondary, #f8f8f8);
+    color: var(--text-primary, #1a1a1a);
+}

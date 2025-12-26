@@ -5,15 +5,17 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import './Sidebar.css';
 
 const STUDENT_LINKS = [
     { to: '/', icon: '🏠', label: 'Tableau de bord' },
-    { to: '/calendar', icon: '📅', label: 'Calendrier' },
+    { to: '/grades', icon: '📊', label: 'Notes' },
+    { to: '/schedule', icon: '📅', label: 'Emploi du temps' },
+    { to: '/messages', icon: '📨', label: 'Messagerie' },
     { to: '/assignments', icon: '📝', label: 'Devoirs' },
-    { to: '/statistics', icon: '📊', label: 'Statistiques' },
+    { to: '/statistics', icon: '📈', label: 'Statistiques' },
 ];
 
 const TEACHER_LINKS = [
@@ -24,15 +26,21 @@ const TEACHER_LINKS = [
     { to: '/statistics', icon: '📊', label: 'Statistiques' },
 ];
 
-export function Sidebar({ collapsed = false, onToggle }) {
+export function Sidebar({ collapsed = false, onToggle, isOpen = false, onClose }) {
     const { user, userType, logout } = useAuth();
-    const location = useLocation();
 
     const links = userType === 'teacher' ? TEACHER_LINKS : STUDENT_LINKS;
 
     return (
-        <aside className={`sidebar ${collapsed ? 'sidebar--collapsed' : ''}`}>
-            {/* Logo / Brand */}
+        <aside className={`sidebar ${collapsed ? 'sidebar--collapsed' : ''} ${isOpen ? 'sidebar--open' : ''}`}>
+            {/* Close button for mobile */}
+            <button
+                className="sidebar__close-btn"
+                onClick={onClose}
+                aria-label="Fermer le menu"
+            >
+                ✕
+            </button>
             <div className="sidebar__brand">
                 <div className="sidebar__logo">
                     <span className="sidebar__logo-icon">📚</span>
@@ -89,6 +97,16 @@ export function Sidebar({ collapsed = false, onToggle }) {
 
             {/* Footer / Logout */}
             <div className="sidebar__footer">
+                <a
+                    href="https://www.ecoledirecte.com/login"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="sidebar__ed-link"
+                    title="Aller sur École Directe"
+                >
+                    <span className="sidebar__link-icon">🔗</span>
+                    {!collapsed && <span>École Directe</span>}
+                </a>
                 <button
                     className="sidebar__logout"
                     onClick={logout}

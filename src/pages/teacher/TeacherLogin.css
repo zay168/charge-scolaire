@@ -1,0 +1,931 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   TEACHER LOGIN PAGE STYLES - Version 2.0
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.teacher-login {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.teacher-login__container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 440px;
+    background: white;
+    border-radius: 24px;
+    padding: 2rem;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+    animation: slideUp 0.5s ease;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Header */
+.teacher-login__header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.teacher-login__logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #8b5cf6, #6366f1);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+}
+
+.teacher-login__logo-icon {
+    font-size: 1.25rem;
+}
+
+.teacher-login__title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0;
+    letter-spacing: -0.5px;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   INSTRUCTIONS PANEL
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.teacher-login__instructions {
+    background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+    border: 1px solid #bae6fd;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.teacher-login__instructions h4 {
+    margin: 0 0 0.75rem;
+    font-size: 0.9rem;
+    color: #0369a1;
+}
+
+.teacher-login__instructions ol {
+    margin: 0;
+    padding-left: 1.25rem;
+    font-size: 0.8rem;
+    color: #0c4a6e;
+}
+
+.teacher-login__instructions li {
+    margin-bottom: 0.25rem;
+}
+
+.teacher-login__instructions-note {
+    margin: 0.75rem 0 0;
+    padding-top: 0.75rem;
+    border-top: 1px solid #bae6fd;
+    font-size: 0.75rem;
+    color: #0284c7;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   FORM STYLES
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.teacher-login__form,
+.teacher-login__signup {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.teacher-login__credentials {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+.teacher-login__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.teacher-login__field label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #334155;
+}
+
+.teacher-login__field input {
+    padding: 0.75rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    background: #f8fafc;
+}
+
+.teacher-login__field input:focus {
+    outline: none;
+    border-color: #8b5cf6;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+.teacher-login__field small {
+    font-size: 0.7rem;
+    color: #94a3b8;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   SEARCH BAR
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.teacher-login__search {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+}
+
+.teacher-login__search label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #334155;
+}
+
+.teacher-login__search input {
+    padding: 0.85rem 1rem;
+    border: 2px solid #8b5cf6;
+    border-radius: 12px;
+    font-size: 1rem;
+    background: #faf5ff;
+}
+
+.teacher-login__search input:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+}
+
+.teacher-login__search-count {
+    font-size: 0.75rem;
+    color: #64748b;
+    text-align: right;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   TEACHER LIST (Grouped by Letter)
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.teacher-login__teacher-groups {
+    max-height: 280px;
+    overflow-y: auto;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    background: #f8fafc;
+}
+
+.teacher-login__group {
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.teacher-login__group:last-child {
+    border-bottom: none;
+}
+
+.teacher-login__group-letter {
+    position: sticky;
+    top: 0;
+    background: linear-gradient(135deg, #8b5cf6, #6366f1);
+    color: white;
+    padding: 0.4rem 1rem;
+    font-weight: 700;
+    font-size: 0.85rem;
+    z-index: 1;
+}
+
+.teacher-login__group-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.teacher-login__teacher-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: white;
+    border: none;
+    border-bottom: 1px solid #f1f5f9;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-align: left;
+}
+
+.teacher-login__teacher-btn:hover:not(:disabled) {
+    background: #f5f3ff;
+}
+
+.teacher-login__teacher-btn:last-child {
+    border-bottom: none;
+}
+
+.teacher-login__teacher-btn.claimed {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.teacher-login__teacher-name {
+    font-weight: 600;
+    color: #0f172a;
+    font-size: 0.9rem;
+}
+
+.teacher-login__teacher-status {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 20px;
+    background: #ddd6fe;
+    color: #7c3aed;
+    font-weight: 600;
+}
+
+.teacher-login__teacher-status.claimed {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+/* No teachers */
+.teacher-login__no-teachers {
+    padding: 2rem;
+    text-align: center;
+    background: #fefce8;
+    border: 1px dashed #facc15;
+    border-radius: 12px;
+}
+
+.teacher-login__no-teachers-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.teacher-login__no-teachers h4 {
+    margin: 0 0 0.5rem;
+    color: #854d0e;
+}
+
+.teacher-login__no-teachers p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #a16207;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   VERIFICATION STEP
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.teacher-login__verify-header {
+    text-align: center;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.teacher-login__verify-icon {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+.teacher-login__verify-header h3 {
+    margin: 0 0 0.5rem;
+    color: #0f172a;
+    font-size: 1.1rem;
+}
+
+.teacher-login__verify-header p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
+.teacher-login__verify-header strong {
+    color: #8b5cf6;
+}
+
+.teacher-login__verify-question {
+    background: #faf5ff;
+    border: 2px solid #e9d5ff;
+    border-radius: 12px;
+    padding: 1rem;
+}
+
+.teacher-login__verify-question label {
+    display: block;
+    font-weight: 600;
+    color: #7c3aed;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.teacher-login__verify-question input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #ddd6fe;
+    border-radius: 8px;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.teacher-login__verify-question input:focus {
+    outline: none;
+    border-color: #8b5cf6;
+}
+
+.teacher-login__verify-question small {
+    display: block;
+    font-size: 0.7rem;
+    color: #a78bfa;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   MANUAL SIGNUP
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.teacher-login__manual-option {
+    text-align: center;
+    padding-top: 1rem;
+    border-top: 1px dashed #e2e8f0;
+    margin-top: 0.5rem;
+}
+
+.teacher-login__manual-option p {
+    margin: 0 0 0.25rem;
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
+.teacher-login__manual-option button {
+    background: none;
+    border: none;
+    color: #8b5cf6;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.teacher-login__manual-option button:hover {
+    text-decoration: underline;
+}
+
+.teacher-login__manual-info {
+    background: #fef3c7;
+    border: 1px solid #fcd34d;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    font-size: 0.8rem;
+    color: #92400e;
+}
+
+.teacher-login__manual-info p {
+    margin: 0 0 0.25rem;
+}
+
+.teacher-login__manual-info p:last-child {
+    margin: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   BUTTONS
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.teacher-login__submit {
+    padding: 0.875rem;
+    background: linear-gradient(135deg, #8b5cf6, #6366f1);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 48px;
+}
+
+.teacher-login__submit:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
+}
+
+.teacher-login__submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.teacher-login__back-btn {
+    background: none;
+    border: none;
+    color: #64748b;
+    font-size: 0.85rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    width: 100%;
+    transition: color 0.2s;
+}
+
+.teacher-login__back-btn:hover {
+    color: #8b5cf6;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ERROR & SUCCESS
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.teacher-login__error {
+    padding: 0.75rem 1rem;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 10px;
+    color: #dc2626;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.teacher-login__success {
+    padding: 0.75rem 1rem;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 10px;
+    color: #16a34a;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   LOADING & SPINNER
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.teacher-login__loading {
+    padding: 2rem;
+    text-align: center;
+    color: #64748b;
+    font-size: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.teacher-login__spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(139, 92, 246, 0.3);
+    border-top-color: #8b5cf6;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   TOGGLE & BACK
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.teacher-login__toggle {
+    text-align: center;
+    margin-top: 1.25rem;
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+.teacher-login__toggle button {
+    background: none;
+    border: none;
+    color: #8b5cf6;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 0.25rem;
+}
+
+.teacher-login__toggle button:hover {
+    text-decoration: underline;
+}
+
+.teacher-login__back {
+    display: block;
+    text-align: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+    font-size: 0.8rem;
+    color: #64748b;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.teacher-login__back:hover {
+    color: #3b82f6;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   BACKGROUND
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.teacher-login__bg {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.teacher-login__bg-circle {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.4;
+}
+
+.teacher-login__bg-circle--1 {
+    width: 500px;
+    height: 500px;
+    background: #8b5cf6;
+    top: -200px;
+    right: -200px;
+}
+
+.teacher-login__bg-circle--2 {
+    width: 400px;
+    height: 400px;
+    background: #6366f1;
+    bottom: -150px;
+    left: -150px;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   CHOICE MODE
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.teacher-login__choice {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.teacher-login__choice-info {
+    background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+    border: 1px solid #bae6fd;
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+}
+
+.teacher-login__choice-info p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #0369a1;
+}
+
+.teacher-login__choice-info p:first-child {
+    margin-bottom: 0.25rem;
+}
+
+.teacher-login__choice-btn {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border-radius: 14px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+}
+
+.teacher-login__choice-btn--primary {
+    background: linear-gradient(135deg, #8b5cf6, #6366f1);
+    color: white;
+}
+
+.teacher-login__choice-btn--primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.35);
+}
+
+.teacher-login__choice-btn--secondary {
+    background: #f8fafc;
+    border-color: #e2e8f0;
+    color: #334155;
+}
+
+.teacher-login__choice-btn--secondary:hover {
+    border-color: #8b5cf6;
+    background: #faf5ff;
+}
+
+.teacher-login__choice-btn--dev {
+    background: #fef3c7;
+    border-color: #f59e0b;
+    color: #92400e;
+}
+
+.teacher-login__choice-btn--dev:hover {
+    background: #fde68a;
+    border-color: #d97706;
+}
+
+.teacher-login__choice-btn--dev:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.teacher-login__choice-icon {
+    font-size: 1.75rem;
+}
+
+.teacher-login__choice-label {
+    display: flex;
+    flex-direction: column;
+}
+
+.teacher-login__choice-label strong {
+    font-size: 1rem;
+}
+
+.teacher-login__choice-label small {
+    font-size: 0.75rem;
+    opacity: 0.8;
+    margin-top: 0.15rem;
+}
+
+.teacher-login__choice-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: #94a3b8;
+    font-size: 0.8rem;
+}
+
+.teacher-login__choice-divider::before,
+.teacher-login__choice-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #e2e8f0;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ED LOGIN INFO
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.teacher-login__ed-info {
+    background: #fef3c7;
+    border: 1px solid #fcd34d;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.teacher-login__ed-info p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #92400e;
+}
+
+.teacher-login__dev-hint {
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    border: 2px dashed #f59e0b;
+    border-radius: 8px;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.8rem;
+    color: #92400e;
+    text-align: center;
+}
+
+.teacher-login__dev-hint code {
+    background: #fff7ed;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-family: 'Consolas', monospace;
+    font-weight: bold;
+    color: #ea580c;
+}
+
+.teacher-login__ed-hint {
+    margin-top: 0.25rem !important;
+    font-size: 0.75rem !important;
+    opacity: 0.8;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   QCM VERIFICATION
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.teacher-login__qcm {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.teacher-login__qcm-header {
+    text-align: center;
+    padding: 1rem;
+}
+
+.teacher-login__qcm-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.teacher-login__qcm-header h3 {
+    margin: 0 0 0.5rem;
+    color: #0f172a;
+    font-size: 1.1rem;
+}
+
+.teacher-login__qcm-header p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+.teacher-login__qcm-question {
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1rem;
+    font-weight: 600;
+    color: #0f172a;
+    text-align: center;
+}
+
+.teacher-login__qcm-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.teacher-login__qcm-option {
+    padding: 0.875rem 1rem;
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+}
+
+.teacher-login__qcm-option:hover:not(:disabled) {
+    border-color: #8b5cf6;
+    background: #faf5ff;
+}
+
+.teacher-login__qcm-option:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   WELCOME / CONFIRMATION SCREEN
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.teacher-login__welcome {
+    text-align: center;
+}
+
+.teacher-login__welcome-icon {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+.teacher-login__welcome h2 {
+    font-size: 1.4rem;
+    color: #1e293b;
+    margin-bottom: 1rem;
+}
+
+.teacher-login__welcome-info {
+    color: #475569;
+    margin-bottom: 1rem;
+}
+
+.teacher-login__welcome-info p {
+    margin: 0.25rem 0;
+}
+
+.teacher-login__info-card {
+    background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
+    border: 1px solid #86efac;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.teacher-login__info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid rgba(134, 239, 172, 0.4);
+}
+
+.teacher-login__info-row:last-child {
+    border-bottom: none;
+}
+
+.teacher-login__info-label {
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+.teacher-login__info-value {
+    font-weight: 600;
+    color: #1e293b;
+    text-align: right;
+}
+
+.teacher-login__info-value--highlight {
+    background: linear-gradient(135deg, #8b5cf6, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
+}
+
+.teacher-login__welcome-note {
+    background: #fef3c7;
+    border: 1px solid #fcd34d;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+    color: #92400e;
+    text-align: left;
+}
+
+.teacher-login__welcome-note p {
+    margin: 0;
+    line-height: 1.4;
+}
+
+.teacher-login__confirm-question {
+    margin: 1rem 0;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.teacher-login__confirm-question p {
+    margin: 0;
+    font-size: 1rem;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   RESPONSIVE
+   ───────────────────────────────────────────────────────────────────────────── */
+
+@media (max-width: 540px) {
+    .teacher-login {
+        padding: 1rem;
+    }
+
+    .teacher-login__container {
+        padding: 1.25rem;
+        border-radius: 20px;
+    }
+
+    .teacher-login__credentials {
+        grid-template-columns: 1fr;
+    }
+
+    .teacher-login__title {
+        font-size: 1.25rem;
+    }
+}

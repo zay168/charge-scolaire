@@ -1,0 +1,423 @@
+/**
+ * DST Board Editor - FULLSCREEN within parent container
+ */
+
+.dst-board-editor {
+    position: relative;
+    width: 100%;
+    min-height: calc(100vh - 60px);
+    /* Account for header if any */
+    background: #f5f5f5;
+    overflow: auto;
+    font-family: Arial, sans-serif;
+    padding: 0;
+    margin: 0;
+    padding-bottom: 70px;
+    /* Space for fixed actions bar */
+}
+
+/* Floating Date Picker */
+.date-picker-float {
+    position: sticky;
+    top: 10px;
+    float: right;
+    margin: 10px;
+    background: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 100;
+    font-size: 0.85rem;
+}
+
+.date-picker-float label {
+    font-weight: 600;
+    color: #333;
+}
+
+.date-picker-float input {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Board Container - FULL WIDTH of parent */
+.board-container {
+    width: 100%;
+    background: white;
+    border: none;
+    clear: both;
+}
+
+/* Title */
+.board-title {
+    background: #d32f2f;
+    color: white;
+    font-size: 1.3rem;
+    font-weight: 700;
+    text-align: center;
+    padding: 12px;
+    border-bottom: 2px solid #1a1a1a;
+    letter-spacing: 1px;
+    outline: none;
+}
+
+.board-subtitle {
+    display: block;
+    width: 100%;
+    background: #fff9c4;
+    border: none;
+    border-bottom: 2px solid #1a1a1a;
+    text-align: center;
+    padding: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+/* Main Table */
+.dst-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.dst-table th {
+    background: #fff9c4;
+    color: #1a1a1a;
+    font-weight: 700;
+    font-size: 0.75rem;
+    padding: 8px 6px;
+    border: 1px solid #1a1a1a;
+    text-align: center;
+}
+
+.dst-table td {
+    border: 1px solid #1a1a1a;
+    padding: 0;
+    vertical-align: middle;
+}
+
+/* Column widths - Flexible */
+.col-classe {
+    width: 8%;
+    min-width: 60px;
+}
+
+.col-duree {
+    width: 15%;
+    min-width: 120px;
+}
+
+.col-eleves {
+    width: 8%;
+    min-width: 60px;
+}
+
+.col-profs {
+    width: auto;
+}
+
+/* Takes remaining space */
+.col-salle {
+    width: 10%;
+    min-width: 80px;
+}
+
+.col-actions {
+    width: 40px;
+    background: #f5f5f5;
+    border: none !important;
+}
+
+/* Cell Inputs */
+.dst-table input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    text-align: center;
+    padding: 6px 4px;
+    font-size: 0.85rem;
+    outline: none;
+}
+
+.dst-table input:focus {
+    background: #e3f2fd;
+}
+
+/* Specific cells */
+.cell-classe {
+    background: #fff9c4;
+}
+
+.cell-classe input {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #1a1a1a;
+}
+
+.cell-duree {
+    background: white;
+}
+
+.cell-duree input {
+    display: block;
+    color: #2e7d32;
+    font-weight: 600;
+    font-size: 0.8rem;
+}
+
+.cell-eleves {
+    background: white;
+}
+
+.cell-eleves input {
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.cell-profs {
+    background: white;
+    text-align: left;
+}
+
+.cell-profs input {
+    text-align: left;
+    padding-left: 8px;
+    font-size: 0.8rem;
+    color: #333;
+}
+
+.cell-salle {
+    background: #ffcdd2 !important;
+}
+
+.cell-salle .salle-label {
+    display: block;
+    font-size: 0.65rem;
+    color: #c62828;
+    font-weight: 700;
+}
+
+.cell-salle input {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #c62828;
+}
+
+.cell-actions {
+    background: #fafafa !important;
+    border: none !important;
+}
+
+.btn-delete {
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 1.2rem;
+    cursor: pointer;
+    opacity: 0.5;
+}
+
+.btn-delete:hover {
+    color: #d32f2f;
+    opacity: 1;
+}
+
+/* Add Row Button */
+.btn-add-row {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background: #f5f5f5;
+    border: 1px dashed #999;
+    border-top: none;
+    color: #666;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-add-row:hover {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+/* TIERS-TEMPS SECTION */
+.tiers-section {
+    margin-top: 20px;
+    border-top: 3px solid #f9a825;
+}
+
+.tiers-title {
+    display: block;
+    width: 100%;
+    background: #f9a825;
+    color: #1a1a1a;
+    border: none;
+    padding: 10px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.tiers-table {
+    background: #fff9c4;
+}
+
+.tiers-row td {
+    background: #fff9c4;
+}
+
+.tiers-row-mixed td {
+    background: #ffe0b2;
+}
+
+.cell-eleve {
+    display: flex;
+    align-items: center;
+    padding: 6px 8px !important;
+    gap: 8px;
+}
+
+.cell-eleve input {
+    flex: 1;
+    text-align: left;
+}
+
+.badge-ordi {
+    background: #d32f2f;
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 3px 6px;
+    border-radius: 3px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.badge-ordi-off {
+    background: #e0e0e0;
+    color: #666;
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 3px 6px;
+    border-radius: 3px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.badge-ordi-off:hover {
+    background: #ffcdd2;
+    color: #c62828;
+}
+
+.cell-duree-tt,
+.cell-count-tt,
+.cell-prof-tt,
+.cell-salle-tt {
+    text-align: center;
+    vertical-align: middle;
+    background: #fff9c4;
+}
+
+.cell-count-tt {
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.cell-prof-tt input {
+    display: block;
+    text-align: left;
+    padding: 2px 4px;
+    font-size: 0.75rem;
+}
+
+.cell-salle-tt {
+    background: #ffcdd2 !important;
+}
+
+.cell-delete button {
+    background: none;
+    border: none;
+    color: #bbb;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.cell-delete button:hover {
+    color: #d32f2f;
+}
+
+.btn-add-tiers {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    background: #fffde7;
+    border: 1px dashed #f9a825;
+    color: #f57f17;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.btn-add-tiers:hover {
+    background: #fff59d;
+}
+
+.tiers-section.mixed {
+    margin-top: 10px;
+    border-top: none;
+}
+
+.tiers-section.mixed .tiers-table {
+    background: #ffe0b2;
+}
+
+/* Board Actions - Sticky at bottom of container */
+.board-actions {
+    position: sticky;
+    bottom: 0;
+    background: white;
+    padding: 12px 20px;
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 50;
+    margin-top: 20px;
+}
+
+.btn-export,
+.btn-save {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-export {
+    background: white;
+    color: #333;
+    border: 2px solid #ddd;
+}
+
+.btn-export:hover {
+    border-color: #333;
+}
+
+.btn-save {
+    background: linear-gradient(135deg, #43a047, #2e7d32);
+    color: white;
+    box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+}
+
+.btn-save:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(46, 125, 50, 0.4);
+}

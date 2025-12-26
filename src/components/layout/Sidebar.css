@@ -210,6 +210,41 @@
     color: hsl(4, 85%, 45%);
 }
 
+/* École Directe Link */
+.sidebar__ed-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    width: 100%;
+    padding: var(--space-2) var(--space-3);
+    margin-bottom: var(--space-2);
+    background: transparent;
+    border-radius: var(--radius-md);
+    color: var(--color-neutral-400);
+    font-size: var(--text-xs);
+    text-decoration: none;
+    transition: all var(--duration-fast) var(--ease-out);
+}
+
+.sidebar__ed-link:hover {
+    background: var(--color-neutral-50);
+    color: var(--color-primary-500);
+}
+
+.sidebar__ed-link .sidebar__link-icon {
+    font-size: 0.9rem;
+    opacity: 0.6;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   MOBILE CLOSE BUTTON (hidden on desktop)
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.sidebar__close-btn {
+    display: none;
+}
+
 /* ─────────────────────────────────────────────────────────────────────────────
    RESPONSIVE
    ───────────────────────────────────────────────────────────────────────────── */
@@ -217,9 +252,41 @@
 @media (max-width: 768px) {
     .sidebar {
         transform: translateX(-100%);
+        z-index: 1000;
+        box-shadow: none;
+        transition: transform 0.3s ease;
     }
 
     .sidebar.sidebar--open {
         transform: translateX(0);
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .sidebar__close-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: var(--space-3);
+        right: var(--space-3);
+        width: 36px;
+        height: 36px;
+        background: var(--color-neutral-50);
+        border: none;
+        border-radius: var(--radius-full);
+        color: var(--color-neutral-600);
+        font-size: 18px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        z-index: 10;
+    }
+
+    .sidebar__close-btn:hover {
+        background: var(--color-neutral-100);
+        color: var(--color-neutral-900);
+    }
+
+    .sidebar__toggle {
+        display: none !important;
     }
 }

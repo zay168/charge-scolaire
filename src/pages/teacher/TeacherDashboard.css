@@ -1,0 +1,559 @@
+/* TeacherDashboard.css - DASHBOARD PAGE STYLES */
+
+/* ============================================
+   HEADER
+   ============================================ */
+
+.teacher-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.teacher-header__title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+}
+
+.teacher-header__subtitle {
+    font-size: 0.9rem;
+    color: #64748b;
+    margin-top: 0.25rem;
+}
+
+.teacher-header__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    transition: all 0.2s;
+}
+
+.teacher-header__cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+}
+
+/* ============================================
+   STAT CARDS
+   ============================================ */
+
+.teacher-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+.teacher-stat-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s;
+}
+
+.teacher-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
+}
+
+.teacher-stat-card--accent {
+    background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+    border: none;
+}
+
+.teacher-stat-card--accent .teacher-stat-card__icon {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.teacher-stat-card--accent .teacher-stat-card__value,
+.teacher-stat-card--accent .teacher-stat-card__label {
+    color: white;
+}
+
+.teacher-stat-card__icon {
+    width: 48px;
+    height: 48px;
+    background: #f1f5f9;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.teacher-stat-card__content {
+    display: flex;
+    flex-direction: column;
+}
+
+.teacher-stat-card__value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.2;
+}
+
+.teacher-stat-card__label {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin-top: 0.1rem;
+}
+
+/* ============================================
+   CONTENT SECTIONS
+   ============================================ */
+
+.teacher-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 1200px) {
+    .teacher-content {
+        grid-template-columns: 1fr;
+    }
+}
+
+.teacher-section {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 1px solid #e2e8f0;
+}
+
+.teacher-section__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+}
+
+.teacher-section__title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+}
+
+.teacher-section__link {
+    font-size: 0.85rem;
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.teacher-section__link:hover {
+    text-decoration: underline;
+}
+
+/* ============================================
+   CLASS CARDS (Dashboard preview)
+   ============================================ */
+
+.teacher-classes {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.teacher-class-card {
+    display: flex;
+    align-items: stretch;
+    background: #f8fafc;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s;
+}
+
+.teacher-class-card:hover {
+    border-color: #bfdbfe;
+    background: white;
+}
+
+.teacher-class-card__color {
+    width: 5px;
+    flex-shrink: 0;
+}
+
+.teacher-class-card__content {
+    padding: 0.85rem 1rem;
+    flex: 1;
+}
+
+.teacher-class-card__name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 0.25rem 0;
+}
+
+.teacher-class-card__meta {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+}
+
+.teacher-class-card__code,
+.teacher-class-card__subject {
+    color: #64748b;
+}
+
+/* ============================================
+   ASSIGNMENT/SCHEDULE ITEMS
+   ============================================ */
+
+.teacher-assignments {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.teacher-assignment-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s;
+}
+
+.teacher-assignment-item:hover {
+    background: white;
+    border-color: #bfdbfe;
+}
+
+.teacher-assignment-item__type {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.teacher-assignment-item__type--test {
+    background: #fef3c7;
+}
+
+.teacher-assignment-item__type--homework {
+    background: #dbeafe;
+}
+
+.teacher-assignment-item__content {
+    flex: 1;
+    min-width: 0;
+}
+
+.teacher-assignment-item__title {
+    display: block;
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 0.95rem;
+    margin-bottom: 0.15rem;
+}
+
+.teacher-assignment-item__date {
+    display: block;
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
+.teacher-assignment-item__badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.teacher-assignment-item__badge--test {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.teacher-assignment-item__badge--homework {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+/* ============================================
+   QUICK ACTIONS
+   ============================================ */
+
+.teacher-actions {
+    margin-top: 2rem;
+}
+
+.teacher-actions__title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 1rem 0;
+}
+
+.teacher-actions__grid {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.teacher-action-card {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1.25rem;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #334155;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.teacher-action-card:hover {
+    border-color: #3b82f6;
+    color: #3b82f6;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.teacher-action-card__icon {
+    font-size: 1.1rem;
+}
+
+/* ============================================
+   EMPTY STATES
+   ============================================ */
+
+.teacher-empty {
+    text-align: center;
+    padding: 2rem;
+    color: #94a3b8;
+}
+
+.teacher-empty span {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.teacher-empty p {
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.teacher-empty small {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+}
+
+.teacher-empty__cta {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background: #3b82f6;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+/* ============================================
+   ALERTS
+   ============================================ */
+
+.teacher-students__session-alert {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: #fef3c7;
+    border: 1px solid #fcd34d;
+    border-radius: 10px;
+}
+
+.teacher-students__session-alert span {
+    font-size: 1.5rem;
+}
+
+.teacher-students__session-alert strong {
+    display: block;
+    color: #92400e;
+}
+
+.teacher-students__session-alert p {
+    margin: 0.25rem 0 0;
+    font-size: 0.85rem;
+    color: #a16207;
+}
+
+.teacher-students__session-alert button {
+    margin-left: auto;
+    padding: 0.5rem 1rem;
+    background: #f59e0b;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+/* ============================================
+   MODAL
+   ============================================ */
+
+.teacher-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.teacher-modal {
+    background: white;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 420px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+}
+
+.teacher-modal__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.teacher-modal__header h2 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #0f172a;
+}
+
+.teacher-modal__close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+.teacher-modal__form {
+    padding: 1.5rem;
+}
+
+.teacher-form-group {
+    margin-bottom: 1rem;
+}
+
+.teacher-form-group label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: #334155;
+    font-size: 0.9rem;
+}
+
+.teacher-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    box-sizing: border-box;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.teacher-input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.teacher-modal__actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+}
+
+/* Buttons */
+.teacher-btn {
+    padding: 0.65rem 1.25rem;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+}
+
+.teacher-btn--primary {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+}
+
+.teacher-btn--primary:hover {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+}
+
+.teacher-btn--primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.teacher-btn--ghost {
+    background: transparent;
+    color: #64748b;
+}
+
+.teacher-btn--ghost:hover {
+    background: #f1f5f9;
+    color: #334155;
+}
+
+.teacher-students__error {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
