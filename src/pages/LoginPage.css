@@ -478,6 +478,36 @@
     }
 }
 
+/* Password Toggle */
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-wrapper .input {
+    width: 100%;
+    padding-right: var(--space-10);
+    /* Make room for the eye icon */
+}
+
+.password-toggle {
+    position: absolute;
+    right: var(--space-3);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: var(--color-neutral-400);
+    transition: color var(--duration-fast);
+    padding: 0;
+    line-height: 1;
+}
+
+.password-toggle:hover {
+    color: var(--color-primary-500);
+}
+
 @media (max-width: 480px) {
     .login-page {
         padding: var(--space-4);

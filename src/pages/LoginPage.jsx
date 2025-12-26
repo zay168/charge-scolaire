@@ -35,6 +35,7 @@ export function LoginPage() {
     });
     const [keepLoggedIn, setKeepLoggedIn] = useState(false);
     const [showTooltip, setShowTooltip] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     // Redirect if already authenticated
     useEffect(() => {
@@ -179,17 +180,27 @@ export function LoginPage() {
                                 <label className="label" htmlFor="password">
                                     Mot de passe
                                 </label>
-                                <input
-                                    className="input"
-                                    type="password"
-                                    id="password"
-                                    name="password"
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                    placeholder="••••••••"
-                                    required
-                                    autoComplete="current-password"
-                                />
+                                <div className="input-wrapper">
+                                    <input
+                                        className="input"
+                                        type={showPassword ? 'text' : 'password'}
+                                        id="password"
+                                        name="password"
+                                        value={formData.password}
+                                        onChange={handleChange}
+                                        placeholder="••••••••"
+                                        required
+                                        autoComplete="current-password"
+                                    />
+                                    <button
+                                        type="button"
+                                        className="password-toggle"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
+                                    >
+                                        {showPassword ? '👁️' : '👁️‍🗨️'}
+                                    </button>
+                                </div>
                             </div>
 
                             {/* Keep logged in option with tooltip */}
