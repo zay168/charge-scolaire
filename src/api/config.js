@@ -21,9 +21,12 @@ export const USE_REAL_API = import.meta.env.VITE_USE_REAL_API === 'true';
 
 /**
  * École Directe API base URL
- * Always use proxy to bypass CORS
+ * In production: use Railway backend (handles sessions correctly)
+ * In development: use Vite proxy
  */
-export const ED_API_BASE = '/api/ed';
+export const ED_API_BASE = import.meta.env.PROD
+    ? 'https://charge-scolaire-production.up.railway.app/api/ed'
+    : '/api/ed';
 
 /**
  * API Version (from École Directe)
