@@ -21,12 +21,9 @@ export const USE_REAL_API = import.meta.env.VITE_USE_REAL_API === 'true';
 
 /**
  * École Directe API base URL
- * In development, this goes through Vite's proxy
- * In production, you need your own proxy server
+ * Always use proxy to bypass CORS
  */
-export const ED_API_BASE = import.meta.env.DEV
-    ? '/api/ed'
-    : (import.meta.env.VITE_PROXY_URL || 'https://api.ecoledirecte.com/v3');
+export const ED_API_BASE = '/api/ed';
 
 /**
  * API Version (from École Directe)

@@ -18,17 +18,11 @@
 
 const API_VERSION = '4.75.0';
 
-// API Base URL configuration:
-// - With EDP Unblock extension: Use direct API URL (extension handles CORS)
-// - Without extension: Use /api/ed proxy (works in both dev and production via serverless function)
-const USE_EDP_UNBLOCK = import.meta.env.VITE_USE_EDP_UNBLOCK === 'true';
-
-const ED_API_BASE = USE_EDP_UNBLOCK
-    ? 'https://api.ecoledirecte.com/v3'  // Direct API with EDP Unblock extension
-    : '/api/ed';                          // Proxy (Vite in dev, Vercel serverless in prod)
+// API Base URL - Always use proxy to bypass CORS
+// The proxy works in both dev (Vite) and production (Vercel serverless)
+const ED_API_BASE = '/api/ed';
 
 console.log('🔧 API Config:', {
-    useEdpUnblock: USE_EDP_UNBLOCK,
     apiBase: ED_API_BASE
 });
 
@@ -264,7 +258,7 @@ class RealEcoleDirecteClient {
      * Otherwise, use Vite proxy method
      */
     async fetchGtkToken() {
-        if (USE_EDP_UNBLOCK) {
+        if (false) {
             // Use EDP Unblock extension method (like Ecole-Directe-Plus)
             return await this.setupGtkViaExtension();
         }
@@ -317,7 +311,7 @@ class RealEcoleDirecteClient {
             window.addEventListener('message', handleMessage);
 
             // Trigger the GTK cookie fetch - extension will intercept this
-            fetch(`https://api.ecoledirecte.com/v3/login.awp?gtk=1&v=${API_VERSION}`, {
+            fetch(`/login.awp?gtk=1&v=${API_VERSION}`, {
                 method: 'GET',
                 referrerPolicy: 'no-referrer',
             })
@@ -374,8 +368,8 @@ class RealEcoleDirecteClient {
             };
 
             // When using EDP Unblock, use direct API URL
-            const loginUrl = USE_EDP_UNBLOCK
-                ? `https://api.ecoledirecte.com/v3/login.awp?v=${API_VERSION}`
+            const loginUrl = false
+                ? `/login.awp?v=${API_VERSION}`
                 : `${ED_API_BASE}/login.awp?v=${API_VERSION}`;
 
             const body = 'data=' + JSON.stringify(payload);
@@ -525,8 +519,8 @@ class RealEcoleDirecteClient {
                     ? [this.savedCnCv] : []
             };
 
-            const loginUrl = USE_EDP_UNBLOCK
-                ? `https://api.ecoledirecte.com/v3/login.awp?v=${API_VERSION}`
+            const loginUrl = false
+                ? `/login.awp?v=${API_VERSION}`
                 : `${ED_API_BASE}/login.awp?v=${API_VERSION}`;
 
             const response = await fetch(loginUrl, {
@@ -586,8 +580,8 @@ class RealEcoleDirecteClient {
      */
     async fetchQCM() {
         // Use direct API URL (extension handles CORS)
-        const url = USE_EDP_UNBLOCK
-            ? `https://api.ecoledirecte.com/v3/connexion/doubleauth.awp?verbe=get&v=${API_VERSION}`
+        const url = false
+            ? `/connexion/doubleauth.awp?verbe=get&v=${API_VERSION}`
             : `${ED_API_BASE}/connexion/doubleauth.awp?verbe=get&v=${API_VERSION}`;
 
         const response = await fetch(url, {
@@ -642,8 +636,8 @@ class RealEcoleDirecteClient {
         const encodedAnswer = this.pendingQCM.rawPropositions[answerIndex];
 
         // Use direct API URL (extension handles CORS)
-        const url = USE_EDP_UNBLOCK
-            ? `https://api.ecoledirecte.com/v3/connexion/doubleauth.awp?verbe=post&v=${API_VERSION}`
+        const url = false
+            ? `/connexion/doubleauth.awp?verbe=post&v=${API_VERSION}`
             : `${ED_API_BASE}/connexion/doubleauth.awp?verbe=post&v=${API_VERSION}`;
 
         // EDP uses { choix: encodedAnswer } as the body
@@ -965,7 +959,7 @@ class RealEcoleDirecteClient {
                 headers,
                 body: 'data=' + JSON.stringify(body),
                 signal: controller.signal,
-                credentials: USE_EDP_UNBLOCK ? 'omit' : 'include',
+                credentials: false ? 'omit' : 'include',
             });
 
             const data = await response.json();
