@@ -15,7 +15,8 @@ const sessions = new Map();
 
 app.use(cors({
     origin: true,
-    credentials: true
+    credentials: true,
+    exposedHeaders: ['X-Session-Id']
 }));
 
 app.use(express.text({ type: '*/*' }));
