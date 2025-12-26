@@ -3,6 +3,23 @@
  * Route: /api/ed/[...path]
  */
 
+// Disable body parsing to get raw body
+export const config = {
+    api: {
+        bodyParser: false,
+    },
+};
+
+// Helper to read raw body
+function getRawBody(req) {
+    return new Promise((resolve, reject) => {
+        let data = '';
+        req.on('data', chunk => { data += chunk; });
+        req.on('end', () => resolve(data));
+        req.on('error', reject);
+    });
+}
+
 export default async function handler(req, res) {
     // Enable CORS
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -24,6 +41,12 @@ export default async function handler(req, res) {
         // If path comes from query (Vercel's [...path] format)
         if (!apiPath && req.query.path) {
             apiPath = Array.isArray(req.query.path) ? req.query.path.join('/') : req.query.path;
+            // Append query string if exists
+            const queryKeys = Object.keys(req.query).filter(k => k !== 'path');
+            if (queryKeys.length > 0) {
+                const qs = queryKeys.map(k => `${k}=${req.query[k]}`).join('&');
+                apiPath += (apiPath.includes('?') ? '&' : '?') + qs;
+            }
         }
 
         if (!apiPath) {
@@ -31,7 +54,7 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: 'Missing API path', url: fullUrl });
         }
 
-        // Build target URL (apiPath already includes query string from original URL)
+        // Build target URL
         const targetUrl = `https://api.ecoledirecte.com/v3/${apiPath}`;
 
         console.log(`[Proxy] ${req.method} -> ${targetUrl}`);
@@ -54,15 +77,11 @@ export default async function handler(req, res) {
             headers['Cookie'] = req.headers.cookie;
         }
 
-        // Get body for POST
+        // Get raw body for POST (preserves exact format)
         let body = undefined;
         if (req.method === 'POST') {
-            // Handle different body formats
-            if (typeof req.body === 'string') {
-                body = req.body;
-            } else if (req.body) {
-                body = JSON.stringify(req.body);
-            }
+            body = await getRawBody(req);
+            console.log('[Proxy] Body:', body.substring(0, 100));
         }
 
         // Make request to École Directe
