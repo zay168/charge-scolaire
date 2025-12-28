@@ -178,6 +178,52 @@ class RealEcoleDirecteClient {
 
         // Session ID for stateful proxy (Railway)
         this.sessionId = null;
+
+        // Rate Limiting / Anti-Ban System
+        this.activeRequests = 0;
+        this.requestQueue = [];
+        this.MAX_CONCURRENT_REQUESTS = 3; // Keep low to avoid detection
+        this.REQUEST_DELAY_MS = 700; // Delay between request starts
+    }
+
+    /**
+     * RATE LIMITING: Acquire a slot to perform a request
+     */
+    async _acquireRequestSlot() {
+        if (this.activeRequests < this.MAX_CONCURRENT_REQUESTS) {
+            this.activeRequests++;
+            // Add a small delay for the next one
+            await new Promise(resolve => setTimeout(resolve, this.REQUEST_DELAY_MS));
+            return;
+        }
+
+        // Wait in queue
+        return new Promise(resolve => {
+            this.requestQueue.push(resolve);
+        });
+    }
+
+    /**
+     * RATE LIMITING: Release a slot and process next request
+     */
+    _releaseRequestSlot() {
+        this.activeRequests--;
+        this._processQueue();
+    }
+
+    /**
+     * Process next item in queue
+     */
+    async _processQueue() {
+        if (this.requestQueue.length > 0 && this.activeRequests < this.MAX_CONCURRENT_REQUESTS) {
+            this.activeRequests++;
+            const nextResolve = this.requestQueue.shift();
+
+            // Add mandatory delay before starting the next queued request
+            await new Promise(resolve => setTimeout(resolve, this.REQUEST_DELAY_MS));
+
+            nextResolve();
+        }
     }
 
     /**
@@ -949,7 +995,12 @@ class RealEcoleDirecteClient {
      * Make authenticated request to École Directe API
      */
     async makeRequest(endpoint, body = {}, queryParams = '') {
+        // RATE LIMITING / QUEUE SYSTEM
+        // Wait until we have a slot available
+        await this._acquireRequestSlot();
+
         if (!this.isAuthenticated()) {
+            this._releaseRequestSlot(); // Release if we fail early
             throw new EcoleDirecteError('Non authentifié', 401);
         }
 
@@ -1006,6 +1057,8 @@ class RealEcoleDirecteClient {
             if (index > -1) {
                 this.abortControllers.splice(index, 1);
             }
+            // Release rate limiting slot
+            this._releaseRequestSlot();
         }
     }
 

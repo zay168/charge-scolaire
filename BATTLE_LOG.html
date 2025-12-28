@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journal de Combat - Opération Railway</title>
+    <!-- GSAP Core -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <!-- GSAP Text Plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/TextPlugin.min.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #050505;
+            --text-color: #00ff41;
+            --highlight: #ffee00;
+            --error: #ff0055;
+            --success: #00ff41;
+            --panel-bg: rgba(17, 17, 17, 0.8);
+            --border: #333;
+            --font-mono: 'Courier New', Courier, monospace;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-mono);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .background-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            text-shadow: 0 0 20px rgba(0, 255, 65, 0.8);
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .subtitle {
+            text-align: center;
+            margin-bottom: 4rem;
+            color: #888;
+            font-size: 1.1rem;
+            opacity: 0;
+            /* Hidden initially for animation */
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        /* Replaced ::before with a real div for animation */
+        .timeline-line {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom,
+                    var(--error) 0%,
+                    var(--highlight) 50%,
+                    var(--success) 100%);
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+            transform-origin: top;
+            transform: scaleY(0);
+            /* Start hidden */
+        }
+
+        .entry {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            padding: 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+            backdrop-filter: blur(5px);
+            border-left: 4px solid var(--border);
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+
+        .entry::before {
+            content: '';
+            position: absolute;
+            left: -2.3rem;
+            top: 2rem;
+            width: 15px;
+            height: 15px;
+            background: var(--bg-color);
+            border: 2px solid currentColor;
+            border-radius: 50%;
+            z-index: 2;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .entry[data-status="failed"] {
+            --status-color: var(--error);
+        }
+
+        .entry[data-status="warning"] {
+            --status-color: var(--highlight);
+        }
+
+        .entry[data-status="success"] {
+            --status-color: var(--success);
+        }
+
+        .entry {
+            border-left-color: var(--status-color);
+        }
+
+        .entry::before {
+            border-color: var(--status-color);
+            background: var(--status-color);
+        }
+
+        .entry h3 {
+            color: var(--status-color);
+            margin-top: 0;
+            text-shadow: 0 0 5px var(--status-color);
+        }
+
+        .timestamp {
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            background: var(--bg-color);
+            padding: 0 10px;
+            font-size: 0.8rem;
+            color: #666;
+            border: 1px solid #333;
+        }
+
+        .log-content {
+            margin-top: 1rem;
+            white-space: pre-wrap;
+            color: #ccc;
+            font-size: 0.95rem;
+            border-left: 2px solid #333;
+            padding-left: 1rem;
+        }
+
+        .victory-banner {
+            text-align: center;
+            margin-top: 6rem;
+            padding: 3rem;
+            border: 2px solid var(--success);
+            background: rgba(0, 255, 65, 0.05);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        .victory-banner h2 {
+            font-size: 3rem;
+            margin: 0 0 1rem 0;
+            color: var(--success);
+            text-shadow: 0 0 20px var(--success);
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: var(--success);
+            top: -10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-grid"></div>
+
+    <div class="container">
+        <h1 class="glitch-text">JOURNAL DE COMBAT</h1>
+        <div class="subtitle">
+            <!-- Text will be typed by GSAP -->
+            <span id="subtitle-text">INITIALISATION...</span><br>
+            STATUT : <span class="status-badge" style="color: var(--success); border: 1px solid var(--success)">MISSION
+                ACCOMPLIE</span>
+        </div>
+
+        <div class="timeline">
+            <!-- The real div for the line animation -->
+            <div class="timeline-line"></div>
+
+            <!-- ROUND 1 -->
+            <div class="entry" data-status="failed">
+                <div class="timestamp">2025-12-26 13:00</div>
+                <h3>⚡ L'ENFER DES DÉPENDANCES</h3>
+                <div class="log-content">ERR_MODULE_NOT_FOUND: Cannot find package 'express'
+                    Builder Nixpacks aveugle. Lockfile désynchronisé.
+                    >> SOLUTION : Purge totale & Rebuild.</div>
+            </div>
+
+            <!-- ROUND 2 -->
+            <div class="entry" data-status="warning">
+                <div class="timestamp">2025-12-26 13:17</div>
+                <h3>⚡ LA GUERRE DU CACHE VERCEL</h3>
+                <div class="log-content">Frontend tape toujours sur /api/ed local.
+                    Vercel ignore la variable ED_API_BASE.
+                    >> SOLUTION : Force Redeploy sans cache.</div>
+            </div>
+
+            <!-- ROUND 3 -->
+            <div class="entry" data-status="failed">
+                <div class="timestamp">2025-12-26 13:23</div>
+                <h3>⚡ LE MYSTÈRE DE L'AMNÉSIE</h3>
+                <div class="log-content">Code 520: Token invalide.
+                    Le serveur perdait la mémoire entre les requêtes (Stateless).
+                    >> SOLUTION : Injection header X-Session-Id pour persistance stateful.</div>
+            </div>
+
+            <!-- ROUND 4 -->
+            <div class="entry" data-status="failed">
+                <div class="timestamp">2025-12-26 13:25</div>
+                <h3>⚡ LE MUR CORS</h3>
+                <div class="log-content">Navigateur aveugle : impossible de lire X-Session-Id.
+                    Sécurité Browser impitoyable.
+                    >> SOLUTION : exposedHeaders: ['X-Session-Id'].</div>
+            </div>
+
+            <!-- ROUND 5 -->
+            <div class="entry" data-status="failed">
+                <div class="timestamp">2025-12-26 13:29</div>
+                <h3>⚡ LE 2FA FANTÔME</h3>
+                <div class="log-content">QCM demande un token... que le proxy gardait pour lui.
+                    >> SOLUTION : Forward manuel des headers 2FA-Token & X-Token.</div>
+            </div>
+
+            <!-- FINAL BOSS -->
+            <div class="entry" data-status="failed">
+                <div class="timestamp">2025-12-26 17:34</div>
+                <h3>💀 LE BOSS FINAL : CODE 505</h3>
+                <div class="log-content">"Mot de passe invalide". L'illusion parfaite.
+                    Une erreur d'encodage transformait "@" en "%40".
+                    Le double-encodage (URI + JSON) était le coupable.
+                    >> SOLUTION : Suppression encodeURIComponent(). Victory.</div>
+            </div>
+        </div>
+
+        <div class="victory-banner">
+            <h2>VICTOIRE TOTALE</h2>
+            <p>SYSTÈME OPÉRATIONNEL À 100%</p>
+            <p style="font-size: 0.8rem; margin-top: 1rem; color: #888">AUTHENTIFICATION STABLE • MOBILE READY • SECURE
+                PROXY</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Register Plugins
+            gsap.registerPlugin(TextPlugin);
+
+            const tl = gsap.timeline();
+
+            // Background grid loops
+            gsap.to(".background-grid", {
+                backgroundPosition: "0px 1000px",
+                duration: 20,
+                repeat: -1,
+                ease: "linear"
+            });
+
+            // 1. Title Reveal
+            tl.from("h1", {
+                duration: 1.5,
+                y: -100,
+                opacity: 0,
+                ease: "elastic.out(1, 0.5)",
+                textShadow: "0 0 50px rgba(0,255,65,1)"
+            });
+
+            // 2. Subtitle container fade in
+            tl.to(".subtitle", {
+                duration: 0.5,
+                opacity: 1
+            });
+
+            // 3. Typing effect for subtitle text
+            tl.to("#subtitle-text", {
+                duration: 1.5,
+                text: "OPÉRATION : PROXY RAILWAY",
+                ease: "none"
+            });
+
+            // 4. Timeline Line Drawing (using the real div now)
+            tl.to(".timeline-line", {
+                duration: 2,
+                scaleY: 1,
+                ease: "power2.inOut"
+            }, "-=0.5");
+
+            // 5. Entries staggering
+            tl.to(".entry", {
+                duration: 0.6,
+                x: 0,
+                opacity: 1,
+                stagger: 0.3,
+                ease: "back.out(1.2)"
+            }, "-=1.5");
+
+            // 6. Victory Banner
+            tl.to(".victory-banner", {
+                duration: 1,
+                scale: 1,
+                opacity: 1,
+                ease: "elastic.out(1, 0.3)",
+                onComplete: launchConfetti
+            });
+
+            // Add hover effects
+            document.querySelectorAll('.entry').forEach(entry => {
+                entry.addEventListener('mouseenter', () => {
+                    gsap.to(entry, { x: 10, scale: 1.02, duration: 0.3, boxShadow: "0 0 20px var(--status-color)" });
+                });
+                entry.addEventListener('mouseleave', () => {
+                    gsap.to(entry, { x: 0, scale: 1, duration: 0.3, boxShadow: "none" });
+                });
+            });
+        });
+
+        function launchConfetti() {
+            const colors = ['#00ff41', '#ffee00', '#ffffff'];
+            const container = document.querySelector('.container');
+            const banner = document.querySelector('.victory-banner');
+            const rect = banner.getBoundingClientRect();
+
+            for (let i = 0; i < 100; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('confetti');
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.left = (Math.random() * rect.width + rect.left) + 'px';
+                particle.style.top = rect.top + 'px';
+                document.body.appendChild(particle);
+
+                gsap.to(particle, {
+                    x: (Math.random() - 0.5) * 500,
+                    y: (Math.random() - 0.5) * 500 - 100,
+                    rotation: Math.random() * 360,
+                    opacity: 0,
+                    duration: 1.5 + Math.random(),
+                    ease: "power2.out",
+                    onComplete: () => particle.remove()
+                });
+            }
+        }
+    </script>
+</body>
+
+</html>
