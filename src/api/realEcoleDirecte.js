@@ -1050,7 +1050,13 @@ class RealEcoleDirecteClient {
                 }
                 throw new EcoleDirecteError('Session expirée, veuillez vous reconnecter', data.code);
             } else {
-                throw new EcoleDirecteError(data.message || 'Erreur API', data.code);
+                if (data.code === 505) {
+                    throw new EcoleDirecteError(
+                        'Mot de passe invalide ou nouvelle connexion détectée. Vérifiez vos emails (validation IP demandée par École Directe) ou réessayez.',
+                        505
+                    );
+                }
+                throw new EcoleDirecteError(data.message || 'Erreur lors de la connexion', data.code);
             }
         } finally {
             const index = this.abortControllers.indexOf(controller);
