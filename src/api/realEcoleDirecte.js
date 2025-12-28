@@ -368,8 +368,8 @@ class RealEcoleDirecteClient {
             // Build login payload with mobile-style authentication for silent relogin
             // Credentials must be encoded like in Ecole-Directe-Plus
             const payload = {
-                identifiant: encodeURIComponent(username),
-                motdepasse: encodeURIComponent(password),
+                identifiant: username, // Removed encodeURIComponent (handled by JSON.stringify)
+                motdepasse: password,  // Removed encodeURIComponent (handled by JSON.stringify)
                 isReLogin: false,
                 sesouvenirdemoi: rememberMe, // Enable mobile-style auth for token renewal
                 uuid: this.deviceUUID, // Device identifier for token renewal
