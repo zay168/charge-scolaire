@@ -219,15 +219,22 @@
 
 /* Day Block */
 .day-tree {
-    /* Using glass effect even for list items */
+    /* Now using glass-panel in JSX, so we need padding */
+    padding: 1.5rem;
+    transition: transform 0.2s ease;
+}
+
+.day-tree:hover {
+    transform: translateY(-2px);
+    border-color: var(--primary-dim);
 }
 
 .day-tree__header {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
     border-bottom: 1px solid var(--border-glass);
 }
 

@@ -273,7 +273,7 @@ export function DashboardPage() {
                                 };
 
                                 return (
-                                    <div key={day.date} className={`day-tree day-tree--${status}`}>
+                                    <div key={day.date} className={`day-tree glass-panel day-tree--${status}`}>
                                         <div className="day-tree__header">
                                             <div className="day-tree__date">
                                                 <span className="day-tree__day-name">{day.day}</span>

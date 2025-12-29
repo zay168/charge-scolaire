@@ -1,70 +1,97 @@
+/* 
+   NEON GLASS DESIGN SYSTEM (DARK MODE ENFORCED)
+   -------------------------------------------------------------------------- */
+
 :root {
-  /* 🎨 NEON GLASS PALETTE */
-  --bg-deep: #050505;
-  --bg-dark: #0a0b10;
-  --bg-glass: rgba(255, 255, 255, 0.03);
-  --bg-glass-hover: rgba(255, 255, 255, 0.06);
-  --bg-glass-strong: rgba(20, 20, 25, 0.7);
-
-  --border-glass: rgba(255, 255, 255, 0.08);
-  --border-glass-light: rgba(255, 255, 255, 0.15);
-
-  /* Accents */
+  /* NEON PALETTE */
   --primary-neon: #00FFA3;
-  /* The Green Glow */
-  --primary-dim: #00b372;
+  /* Neon Green */
   --secondary-neon: #BF5AF2;
-  /* The Purple Glow */
-  --secondary-blue: #0A84FF;
+  /* Neon Purple */
+  --accent-blue: #0A84FF;
+  /* Neon Blue */
 
-  /* Text */
+  /* DARK BACKGROUNDS (No light mode fallback) */
+  --bg-deep: #050505;
+  /* Almost black */
+  --bg-card: rgba(20, 20, 25, 0.6);
+  --bg-glass: rgba(255, 255, 255, 0.03);
+
+  /* TEXT */
   --text-primary: #FFFFFF;
-  --text-secondary: rgba(255, 255, 255, 0.6);
+  --text-secondary: rgba(255, 255, 255, 0.7);
   --text-tertiary: rgba(255, 255, 255, 0.4);
 
-  /* Status */
-  --status-success: #32D74B;
-  --status-warning: #FFD60A;
-  --status-error: #FF453A;
+  /* BORDERS & EFFECTS */
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --glass-blur: blur(20px);
+  --shadow-neon: 0 0 20px rgba(0, 255, 163, 0.15);
 
-  /* Effects */
-  --glass-blur: 20px;
-  --glow-shadow: 0 0 20px rgba(0, 255, 163, 0.15);
+  /* SPACING */
+  --radius-lg: 24px;
+  --radius-md: 16px;
+  --radius-sm: 8px;
 
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  /* Force dark scheme */
   color-scheme: dark;
 }
 
-body {
+/* GLOBAL RESET & BASE */
+* {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  background-color: var(--bg-deep);
-  /* Subtle ambient gradient */
-  background-image:
-    radial-gradient(circle at 10% 20%, rgba(0, 255, 163, 0.03) 0%, transparent 40%),
-    radial-gradient(circle at 90% 80%, rgba(191, 90, 242, 0.03) 0%, transparent 40%);
-  color: var(--text-primary);
-  min-height: 100vh;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Glass Card Utility */
+body,
+html {
+  background-color: var(--bg-deep) !important;
+  color: var(--text-primary) !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Background gradient mesh */
+body::before {
+  content: '';
+  position: fixed;
+  top: -20%;
+  left: -20%;
+  width: 140%;
+  height: 140%;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(0, 255, 163, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(191, 90, 242, 0.08) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* UTILITIES */
 .glass-panel {
-  background: var(--bg-glass);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
+  background: var(--bg-card);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
   border: 1px solid var(--border-glass);
-  border-radius: 24px;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-lg);
 }
 
-.glass-panel:hover {
-  border-color: var(--border-glass-light);
+.text-neon {
+  color: var(--primary-neon);
+  text-shadow: 0 0 10px rgba(0, 255, 163, 0.3);
 }
 
-/* Scrollbar */
+.text-neon-purple {
+  color: var(--secondary-neon);
+  text-shadow: 0 0 10px rgba(191, 90, 242, 0.3);
+}
+
+/* SCROLLBAR */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -72,26 +99,18 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border-glass);
-  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--border-glass-light);
+  background: rgba(255, 255, 255, 0.3);
 }
 
-/* Typography Overrides */
-h1,
-h2,
-h3,
-h4 {
-  margin: 0;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-}
-
-a {
-  text-decoration: none;
-  color: inherit;
-  transition: opacity 0.2s;
+/* OVERRIDE ANY LEGACY LIGHT MODE STYLES */
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg-deep: #050505 !important;
+    --text-primary: #FFFFFF !important;
+  }
 }
