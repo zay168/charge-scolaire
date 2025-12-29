@@ -1,11 +1,11 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * WORKLOAD CHART COMPONENT
- * Visualizes workload data using Chart.js
+ * WORKLOAD CHART COMPONENT (NEON GLASS V2)
+ * Visualizes workload data using Chart.js with Neon aesthetics
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { useMemo } from 'react';
+import { useMemo, useRef, useEffect, useState } from 'react';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -34,30 +34,27 @@ ChartJS.register(
     Filler
 );
 
-// Color palette
+// Neon Palette matching index.css
 const COLORS = {
-    light: 'hsl(142, 70%, 45%)',
-    medium: 'hsl(42, 90%, 50%)',
-    heavy: 'hsl(4, 85%, 55%)',
-    critical: 'hsl(350, 90%, 45%)',
-    primary: 'hsl(220, 60%, 50%)',
-    primaryLight: 'hsla(220, 60%, 50%, 0.1)',
+    primary: '#00FFA3', // Neon Green
+    secondary: '#BF5AF2', // Neon Purple
+    success: '#32D74B',
+    warning: '#FFD60A',
+    critical: '#FF453A',
+    text: 'rgba(255, 255, 255, 0.7)',
+    grid: 'rgba(255, 255, 255, 0.1)',
+    tooltipBg: 'rgba(10, 11, 16, 0.9)',
 };
 
-// Thresholds for color coding (new simplified system)
 const THRESHOLDS = {
     daily: { light: 2, medium: 4, heavy: 6 },
     weekly: { light: 8, medium: 15, heavy: 20 },
 };
 
-/**
- * Get color based on score and thresholds
- */
 function getScoreColor(score, type = 'daily') {
     const t = THRESHOLDS[type];
-    if (score <= t.light) return COLORS.light;
-    if (score <= t.medium) return COLORS.medium;
-    if (score <= t.heavy) return COLORS.heavy;
+    if (score <= t.light) return COLORS.success;
+    if (score <= t.medium) return COLORS.warning;
     return COLORS.critical;
 }
 
@@ -69,9 +66,23 @@ export function DailyWorkloadChart({
     height = 200,
     showLegend = false,
 }) {
+    // Create gradient for bars
+    const chartRef = useRef(null);
+    const [chartGradient, setChartGradient] = useState(null);
+
+    useEffect(() => {
+        const chart = chartRef.current;
+        if (!chart) return;
+
+        const ctx = chart.ctx;
+        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(0, 255, 163, 0.8)');
+        gradient.addColorStop(1, 'rgba(0, 255, 163, 0.2)');
+        setChartGradient(gradient);
+    }, []);
+
     const chartData = useMemo(() => ({
         labels: data.map(d => {
-            // Format date nicely: "Lun 6"
             if (d.day && d.date) {
                 const dateObj = new Date(d.date);
                 return `${d.day} ${dateObj.getDate()}`;
@@ -82,43 +93,27 @@ export function DailyWorkloadChart({
             {
                 label: 'Points de charge',
                 data: data.map(d => d.score),
-                backgroundColor: data.map(d =>
-                    d.isToday
-                        ? COLORS.primary
-                        : getScoreColor(d.score, 'daily')
-                ),
-                borderColor: data.map(d =>
-                    d.isToday
-                        ? COLORS.primary
-                        : getScoreColor(d.score, 'daily')
-                ),
-                borderWidth: 1,
-                borderRadius: 6,
-                barThickness: 28,
+                backgroundColor: data.map(d => d.isToday ? COLORS.secondary : (chartGradient || COLORS.primary)),
+                borderRadius: 8,
+                barThickness: 24,
+                borderWidth: 0,
             },
         ],
-    }), [data]);
-
-    const maxScore = Math.max(12, ...data.map(d => d.score || 0));
+    }), [data, chartGradient]);
 
     const options = useMemo(() => ({
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-            legend: {
-                display: showLegend,
-            },
-            title: {
-                display: false,
-            },
+            legend: { display: showLegend },
             tooltip: {
-                backgroundColor: 'hsl(220, 20%, 15%)',
-                titleColor: 'white',
-                bodyColor: 'hsl(220, 10%, 80%)',
-                borderColor: 'hsl(220, 15%, 25%)',
+                backgroundColor: COLORS.tooltipBg,
+                titleColor: '#fff',
+                bodyColor: '#ccc',
+                borderColor: COLORS.grid,
                 borderWidth: 1,
-                cornerRadius: 8,
-                padding: 12,
+                padding: 10,
+                displayColors: false, // Hide color box
                 callbacks: {
                     title: (context) => {
                         const idx = context[0].dataIndex;
@@ -132,253 +127,116 @@ export function DailyWorkloadChart({
                         }
                         return context[0].label;
                     },
-                    label: (context) => {
-                        const score = context.raw;
-                        const count = data[context.dataIndex]?.count || 0;
-                        let status = 'Léger';
-                        if (score > THRESHOLDS.daily.heavy) status = 'Critique';
-                        else if (score > THRESHOLDS.daily.medium) status = 'Chargé';
-                        else if (score > THRESHOLDS.daily.light) status = 'Modéré';
-                        return [
-                            `${score} points (${status})`,
-                            `${count} ${count > 1 ? 'travaux' : 'travail'}`
-                        ];
-                    },
-                },
+                }
             },
         },
         scales: {
             x: {
-                title: {
-                    display: true,
-                    text: 'Jour',
-                    color: 'hsl(220, 10%, 45%)',
-                    font: {
-                        size: 11,
-                        weight: '600',
-                    },
-                    padding: { top: 8 },
-                },
-                grid: {
-                    display: false,
-                },
-                ticks: {
-                    color: 'hsl(220, 10%, 40%)',
-                    font: {
-                        size: 11,
-                        weight: '500',
-                    },
-                },
+                grid: { display: false },
+                ticks: { color: COLORS.text, font: { size: 10 } },
             },
             y: {
-                title: {
-                    display: true,
-                    text: 'Points de charge',
-                    color: 'hsl(220, 10%, 45%)',
-                    font: {
-                        size: 11,
-                        weight: '600',
-                    },
-                    padding: { bottom: 8 },
-                },
-                beginAtZero: true,
-                suggestedMax: maxScore + 2,
-                grid: {
-                    color: (ctx) => {
-                        // Highlight threshold lines
-                        if (ctx.tick.value === THRESHOLDS.daily.light) return 'hsla(142, 70%, 45%, 0.3)';
-                        if (ctx.tick.value === THRESHOLDS.daily.medium) return 'hsla(42, 90%, 50%, 0.3)';
-                        if (ctx.tick.value === THRESHOLDS.daily.heavy) return 'hsla(4, 85%, 55%, 0.3)';
-                        return 'hsl(220, 10%, 92%)';
-                    },
-                    lineWidth: (ctx) => {
-                        // Thicker threshold lines
-                        if ([THRESHOLDS.daily.light, THRESHOLDS.daily.medium, THRESHOLDS.daily.heavy].includes(ctx.tick.value)) {
-                            return 2;
-                        }
-                        return 1;
-                    },
-                },
-                ticks: {
-                    color: 'hsl(220, 10%, 40%)',
-                    stepSize: 2,
-                    callback: (value) => {
-                        // Add labels at thresholds
-                        if (value === THRESHOLDS.daily.light) return `${value} (léger)`;
-                        if (value === THRESHOLDS.daily.medium) return `${value} (modéré)`;
-                        if (value === THRESHOLDS.daily.heavy) return `${value} (chargé)`;
-                        return value;
-                    },
-                    font: {
-                        size: 10,
-                    },
-                },
+                grid: { color: COLORS.grid, borderDash: [4, 4] },
+                ticks: { color: COLORS.text, font: { size: 10 } },
+                border: { display: false }, // Hide axis line
             },
         },
-    }), [data, showLegend, maxScore]);
+    }), [data, showLegend]);
 
     return (
         <div className="workload-chart" style={{ height }}>
-            <Bar data={chartData} options={options} />
+            <Bar ref={chartRef} data={chartData} options={options} />
         </div>
     );
 }
 
 /**
- * Weekly Workload Bar Chart (changed from line to bar for clarity)
+ * Weekly Workload Line Chart (Smooth Wave)
  */
 export function WeeklyWorkloadChart({
     data,
     height = 200,
     showLegend = false,
 }) {
+    const chartRef = useRef(null);
+    const [chartGradient, setChartGradient] = useState(null);
+
+    useEffect(() => {
+        const chart = chartRef.current;
+        if (!chart) return;
+
+        const ctx = chart.ctx;
+        // Purple/Blue Gradient Fill
+        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(191, 90, 242, 0.5)'); // Purple
+        gradient.addColorStop(1, 'rgba(10, 132, 255, 0.0)'); // Blue fade to transparent
+        setChartGradient(gradient);
+    }, []);
+
     const chartData = useMemo(() => ({
-        labels: data.map(d => d.week || `Semaine ${d.weekNumber}`),
+        labels: data.map(d => d.week || `S${d.weekNumber}`),
         datasets: [
             {
                 label: 'Points de charge',
                 data: data.map(d => d.score),
-                backgroundColor: data.map(d =>
-                    d.isCurrent
-                        ? COLORS.primary
-                        : getScoreColor(d.score, 'weekly')
-                ),
-                borderColor: data.map(d =>
-                    d.isCurrent
-                        ? COLORS.primary
-                        : getScoreColor(d.score, 'weekly')
-                ),
-                borderWidth: 1,
-                borderRadius: 6,
-                barThickness: 40,
+                fill: true,
+                backgroundColor: chartGradient || 'rgba(191, 90, 242, 0.2)',
+                borderColor: '#BF5AF2', // Neon Purple Line
+                borderWidth: 3,
+                tension: 0.4, // Smooth curve
+                pointBackgroundColor: '#fff',
+                pointBorderColor: '#BF5AF2',
+                pointBorderWidth: 2,
+                pointRadius: 4,
+                pointHoverRadius: 6,
             },
         ],
-    }), [data]);
-
-    const maxScore = Math.max(25, ...data.map(d => d.score || 0));
+    }), [data, chartGradient]);
 
     const options = useMemo(() => ({
         responsive: true,
         maintainAspectRatio: false,
+        interaction: {
+            mode: 'index',
+            intersect: false,
+        },
         plugins: {
-            legend: {
-                display: showLegend,
-            },
+            legend: { display: false },
             tooltip: {
-                backgroundColor: 'hsl(220, 20%, 15%)',
-                titleColor: 'white',
-                bodyColor: 'hsl(220, 10%, 80%)',
-                borderColor: 'hsl(220, 15%, 25%)',
+                backgroundColor: COLORS.tooltipBg,
+                titleColor: '#fff',
+                bodyColor: '#ccc',
+                padding: 10,
+                borderColor: COLORS.grid,
                 borderWidth: 1,
-                cornerRadius: 8,
-                padding: 12,
                 callbacks: {
-                    title: (context) => {
-                        const idx = context[0].dataIndex;
-                        const d = data[idx];
-                        if (d.isCurrent) return '📍 Cette semaine';
-                        return `Semaine du ${d.week}`;
-                    },
-                    label: (context) => {
-                        const score = context.raw;
-                        const d = data[context.dataIndex];
-                        let status = 'Légère';
-                        if (score > THRESHOLDS.weekly.heavy) status = 'Critique';
-                        else if (score > THRESHOLDS.weekly.medium) status = 'Chargée';
-                        else if (score > THRESHOLDS.weekly.light) status = 'Modérée';
-
-                        const lines = [
-                            `${score} points (${status})`,
-                        ];
-
-                        if (d.homeworkCount !== undefined) {
-                            lines.push(`📝 ${d.homeworkCount} devoir${d.homeworkCount > 1 ? 's' : ''}`);
-                        }
-                        if (d.testCount !== undefined && d.testCount > 0) {
-                            lines.push(`📋 ${d.testCount} évaluation${d.testCount > 1 ? 's' : ''}`);
-                        }
-
-                        return lines;
-                    },
-                },
+                    label: (context) => `${context.raw} points`
+                }
             },
         },
         scales: {
             x: {
-                title: {
-                    display: true,
-                    text: 'Semaine',
-                    color: 'hsl(220, 10%, 45%)',
-                    font: {
-                        size: 11,
-                        weight: '600',
-                    },
-                    padding: { top: 8 },
-                },
-                grid: {
-                    display: false,
-                },
-                ticks: {
-                    color: 'hsl(220, 10%, 40%)',
-                    font: {
-                        size: 10,
-                        weight: '500',
-                    },
-                },
+                grid: { display: false },
+                ticks: { color: COLORS.text, font: { size: 10 } },
             },
             y: {
-                title: {
-                    display: true,
-                    text: 'Points de charge',
-                    color: 'hsl(220, 10%, 45%)',
-                    font: {
-                        size: 11,
-                        weight: '600',
-                    },
-                    padding: { bottom: 8 },
-                },
-                beginAtZero: true,
-                suggestedMax: maxScore + 5,
-                grid: {
-                    color: (ctx) => {
-                        if (ctx.tick.value === THRESHOLDS.weekly.light) return 'hsla(142, 70%, 45%, 0.3)';
-                        if (ctx.tick.value === THRESHOLDS.weekly.medium) return 'hsla(42, 90%, 50%, 0.3)';
-                        if (ctx.tick.value === THRESHOLDS.weekly.heavy) return 'hsla(4, 85%, 55%, 0.3)';
-                        return 'hsl(220, 10%, 92%)';
-                    },
-                    lineWidth: (ctx) => {
-                        if ([THRESHOLDS.weekly.light, THRESHOLDS.weekly.medium, THRESHOLDS.weekly.heavy].includes(ctx.tick.value)) {
-                            return 2;
-                        }
-                        return 1;
-                    },
-                },
-                ticks: {
-                    color: 'hsl(220, 10%, 40%)',
-                    stepSize: 5,
-                    callback: (value) => {
-                        if (value === THRESHOLDS.weekly.light) return `${value} (léger)`;
-                        if (value === THRESHOLDS.weekly.medium) return `${value} (modéré)`;
-                        if (value === THRESHOLDS.weekly.heavy) return `${value} (chargé)`;
-                        return value;
-                    },
-                    font: {
-                        size: 10,
-                    },
-                },
+                grid: { color: COLORS.grid, borderDash: [4, 4] },
+                ticks: { color: COLORS.text, font: { size: 10 } },
+                border: { display: false },
+                min: 0,
             },
         },
-    }), [data, showLegend, maxScore]);
+    }), []);
 
     return (
         <div className="workload-chart" style={{ height }}>
-            <Bar data={chartData} options={options} />
+            <Line ref={chartRef} data={chartData} options={options} />
         </div>
     );
 }
 
 /**
- * Subject Distribution Chart
+ * Subject Distribution Chart (Horizontal Bar)
  */
 export function SubjectDistributionChart({
     data,
@@ -393,20 +251,18 @@ export function SubjectDistributionChart({
         labels: subjects.map(s => s.name),
         datasets: [
             {
-                label: 'Charge par matière',
+                label: 'Charge',
                 data: subjects.map(s => s.totalWeight),
                 backgroundColor: [
-                    'hsl(220, 70%, 55%)',
-                    'hsl(4, 85%, 55%)',
-                    'hsl(142, 70%, 45%)',
-                    'hsl(42, 90%, 50%)',
-                    'hsl(280, 65%, 55%)',
-                    'hsl(180, 60%, 45%)',
-                    'hsl(32, 85%, 55%)',
-                    'hsl(340, 75%, 55%)',
+                    '#00FFA3', // Green
+                    '#BF5AF2', // Purple
+                    '#0A84FF', // Blue
+                    '#FFD60A', // Yellow
+                    '#FF453A', // Red
+                    '#FF9F0A', // Orange
                 ],
-                borderWidth: 0,
-                borderRadius: 6,
+                borderRadius: 4,
+                barThickness: 12,
             },
         ],
     }), [subjects]);
@@ -416,49 +272,26 @@ export function SubjectDistributionChart({
         maintainAspectRatio: false,
         indexAxis: 'y',
         plugins: {
-            legend: {
-                display: false,
-            },
-            tooltip: {
-                backgroundColor: 'hsl(220, 20%, 15%)',
-                titleColor: 'white',
-                bodyColor: 'hsl(220, 10%, 80%)',
-                cornerRadius: 8,
-                padding: 12,
-                callbacks: {
-                    label: (context) => {
-                        const subjectData = subjects[context.dataIndex];
-                        return [
-                            `Score total: ${subjectData.totalWeight}`,
-                            `${subjectData.count} ${subjectData.count > 1 ? 'devoirs' : 'devoir'}`,
-                        ];
-                    },
-                },
-            },
+            legend: { display: false },
+            tooltip: { displayColors: false },
         },
         scales: {
             x: {
-                beginAtZero: true,
-                grid: {
-                    color: 'hsl(220, 10%, 92%)',
-                },
-                ticks: {
-                    color: 'hsl(220, 10%, 50%)',
-                },
+                grid: { color: COLORS.grid, borderDash: [4, 4] },
+                ticks: { color: COLORS.text, font: { size: 10 } },
+                border: { display: false },
             },
             y: {
-                grid: {
-                    display: false,
-                },
+                grid: { display: false },
                 ticks: {
-                    color: 'hsl(220, 10%, 40%)',
-                    font: {
-                        weight: 500,
-                    },
+                    color: '#fff',
+                    font: { size: 11, weight: 500 },
+                    autoSkip: false,
                 },
+                border: { display: false },
             },
         },
-    }), [subjects]);
+    }), []);
 
     return (
         <div className="workload-chart" style={{ height }}>

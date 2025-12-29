@@ -1,509 +1,441 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   DASHBOARD PAGE STYLES
+   DASHBOARD PAGE STYLES (NEON GLASS V2)
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .dashboard {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: var(--space-6);
-    animation: fade-in 0.3s ease-out;
+    /* Layout: Sidebar is fixed, so we need margin-left */
+    /* If sidebar is expanded (260px) + padding */
+    padding: 2rem;
+    max-width: 1600px;
 }
 
-/* ─────────────────────────────────────────────────────────────────────────────
-   HEADER
-   ───────────────────────────────────────────────────────────────────────────── */
+/* If sidebar collapsed: parent component handles class toggle on main, 
+   but since CSS modules aren't used, we rely on AppLayout padding. 
+   Assuming standard layout. */
 
+/* ── HEADER ── */
 .dashboard__header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: var(--space-8);
+    align-items: flex-end;
+    margin-bottom: 2.5rem;
 }
 
 .dashboard__greeting {
-    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 .dashboard__title {
-    margin: 0 0 var(--space-2);
-    font-size: var(--text-2xl);
-    font-weight: var(--font-bold);
-    color: var(--color-neutral-900);
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.03em;
 }
 
 .dashboard__name {
-    background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-700));
+    background: linear-gradient(135deg, var(--primary-neon), var(--secondary-neon));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    background-clip: text;
+    text-shadow: 0 0 30px rgba(0, 255, 163, 0.3);
 }
 
 .dashboard__subtitle {
-    margin: 0;
-    font-size: var(--text-base);
-    color: var(--color-neutral-500);
+    font-size: 1.1rem;
+    color: var(--text-secondary);
 }
 
 .dashboard__date {
-    padding: var(--space-2) var(--space-4);
-    background: var(--color-neutral-0);
-    border: var(--border-thin) solid var(--color-neutral-100);
-    border-radius: var(--radius-lg);
-    font-size: var(--text-sm);
-    font-weight: var(--font-medium);
-    color: var(--color-neutral-600);
-    text-transform: capitalize;
+    font-size: 1rem;
+    color: var(--text-tertiary);
+    background: var(--bg-glass);
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    border: 1px solid var(--border-glass);
+    backdrop-filter: blur(10px);
 }
 
-/* ─────────────────────────────────────────────────────────────────────────────
-   STATS CARDS
-   ───────────────────────────────────────────────────────────────────────────── */
-
+/* ── STATS GRID ── */
 .dashboard__stats {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--space-5);
-    margin-bottom: var(--space-8);
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
 }
 
 .stat-card {
+    background: var(--bg-glass);
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--border-glass);
+    border-radius: 20px;
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
-    padding: var(--space-5);
-    background: var(--color-neutral-0);
-    border: var(--border-thin) solid var(--color-neutral-100);
-    border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-sm);
-    transition: all var(--duration-fast) var(--ease-out);
+    gap: 1rem;
+    transition: transform 0.2s, border-color 0.2s;
+    position: relative;
+    overflow: hidden;
 }
 
 .stat-card:hover {
-    box-shadow: var(--shadow-md);
     transform: translateY(-2px);
+    border-color: var(--primary-dim);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Animated glow blob behind icon */
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, rgba(0, 255, 163, 0.15) 0%, transparent 70%);
+    filter: blur(20px);
+    z-index: 0;
 }
 
 .stat-card__header {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
+    gap: 0.75rem;
+    z-index: 1;
 }
 
 .stat-card__icon {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.2));
 }
 
 .stat-card__title {
-    margin: 0;
-    font-size: var(--text-sm);
-    font-weight: var(--font-medium);
-    color: var(--color-neutral-500);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    letter-spacing: 0.02em;
 }
 
 .stat-card__content {
-    display: flex;
-    align-items: baseline;
-    gap: var(--space-2);
+    z-index: 1;
 }
 
 .stat-card__value {
-    font-size: var(--text-2xl);
-    font-weight: var(--font-bold);
-    color: var(--color-neutral-900);
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
     line-height: 1;
+    margin-bottom: 0.25rem;
 }
 
 .stat-card__label {
-    font-size: var(--text-sm);
-    color: var(--color-neutral-500);
+    font-size: 0.85rem;
+    color: var(--text-tertiary);
+}
+
+/* Variant styles */
+.stat-card--today .stat-card__value {
+    color: var(--primary-neon);
+}
+
+.stat-card--dst .stat-card__value {
+    color: var(--status-warning);
+}
+
+.stat-card--dst::before {
+    background: radial-gradient(circle, rgba(255, 214, 10, 0.15) 0%, transparent 70%);
 }
 
 .stat-card__warning {
-    padding: var(--space-2) var(--space-3);
-    background: hsl(42, 90%, 94%);
-    color: hsl(38, 92%, 35%);
-    font-size: var(--text-xs);
-    font-weight: var(--font-semibold);
-    border-radius: var(--radius-md);
-    animation: pulse-warning 2s ease-in-out infinite;
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--status-warning);
+    background: rgba(255, 214, 10, 0.1);
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
-/* Accent colors for stat cards */
-.stat-card--today {
-    border-left: 3px solid var(--color-primary-400);
-}
-
-.stat-card--week {
-    border-left: 3px solid var(--color-accent-400);
-}
-
-.stat-card--dst {
-    border-left: 3px solid hsl(280, 65%, 55%);
-}
-
-.stat-card--average {
-    border-left: 3px solid hsl(142, 70%, 45%);
-}
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   MAIN GRID
-   ───────────────────────────────────────────────────────────────────────────── */
-
+/* ── MAIN GRID ── */
 .dashboard__grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-6);
+    grid-template-columns: 2fr 1fr;
+    /* 2/3 Charts+Assignments, 1/3 Subjects */
+    gap: 2rem;
+    align-items: start;
 }
 
 .dashboard__section {
-    background: var(--color-neutral-0);
-    border: var(--border-thin) solid var(--color-neutral-100);
-    border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-sm);
-    padding: var(--space-6);
-}
-
-.dashboard__section--assignments {
-    grid-row: span 2;
-}
-
-.dashboard__section--subjects {
-    grid-column: span 2;
-}
-
-.dashboard__section--warnings {
-    grid-column: span 2;
+    background: var(--bg-glass);
+    border: 1px solid var(--border-glass);
+    border-radius: 24px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    /* Spacing if stacked */
 }
 
 .dashboard__section-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: var(--space-5);
+    margin-bottom: 1.5rem;
 }
 
 .dashboard__section-title {
+    font-size: 1.2rem;
+    color: var(--text-primary);
     display: flex;
     align-items: center;
-    gap: var(--space-2);
-    margin: 0;
-    font-size: var(--text-md);
-    font-weight: var(--font-semibold);
-    color: var(--color-neutral-800);
+    gap: 0.75rem;
 }
 
 .dashboard__section-link {
-    font-size: var(--text-sm);
-    font-weight: var(--font-medium);
-    color: var(--color-primary-500);
-    text-decoration: none;
-    transition: color var(--duration-fast) var(--ease-out);
+    font-size: 0.9rem;
+    color: var(--primary-neon);
+    font-weight: 500;
 }
 
 .dashboard__section-link:hover {
-    color: var(--color-primary-600);
+    text-decoration: underline;
+    text-decoration-color: var(--primary-neon);
 }
 
-/* ─────────────────────────────────────────────────────────────────────────────
-   DAILY TREE VIEW
-   ───────────────────────────────────────────────────────────────────────────── */
+.dashboard__chart-container {
+    /* Give charts a container that fits the glass theme */
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 16px;
+    position: relative;
+}
 
+/* ── ASSIGNMENTS LIST (Transforming to Cards) ── */
 .dashboard__daily-tree {
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
+    gap: 1.5rem;
 }
 
+/* Day Block */
 .day-tree {
-    border: 1px solid var(--color-neutral-100);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    background: var(--color-neutral-50);
-}
-
-.day-tree--light {
-    border-left: 4px solid hsl(142, 70%, 45%);
-}
-
-.day-tree--medium {
-    border-left: 4px solid hsl(42, 90%, 50%);
-}
-
-.day-tree--heavy {
-    border-left: 4px solid hsl(24, 90%, 55%);
-}
-
-.day-tree--critical {
-    border-left: 4px solid hsl(4, 85%, 55%);
+    /* Using glass effect even for list items */
 }
 
 .day-tree__header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: var(--space-3) var(--space-4);
-    background: var(--color-neutral-0);
-    border-bottom: 1px solid var(--color-neutral-100);
+    align-items: baseline;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-glass);
 }
 
 .day-tree__date {
-    display: flex;
-    align-items: baseline;
-    gap: var(--space-2);
-}
-
-.day-tree__day-name {
-    font-weight: var(--font-bold);
-    color: var(--color-neutral-900);
-    font-size: var(--text-base);
-}
-
-.day-tree__full-date {
-    font-size: var(--text-sm);
-    color: var(--color-neutral-500);
-}
-
-.day-tree__stats {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
 }
 
 .day-tree__status {
-    padding: 2px 10px;
-    border-radius: var(--radius-full);
-    font-size: var(--text-xs);
-    font-weight: var(--font-semibold);
+    font-size: 0.75rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 100px;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-tertiary);
 }
 
-.day-tree__status--light {
-    background: hsl(142, 70%, 92%);
-    color: hsl(142, 70%, 30%);
+.day-tree__status--heading {
+    color: var(--status-warning);
+    background: rgba(255, 214, 10, 0.1);
 }
 
-.day-tree__status--medium {
-    background: hsl(42, 90%, 90%);
-    color: hsl(42, 90%, 30%);
-}
-
-.day-tree__status--heavy {
-    background: hsl(24, 90%, 90%);
-    color: hsl(24, 90%, 35%);
-}
-
-.day-tree__status--critical {
-    background: hsl(4, 85%, 92%);
-    color: hsl(4, 85%, 40%);
-}
-
-.day-tree__score {
-    font-size: var(--text-xs);
-    color: var(--color-neutral-500);
-    font-weight: var(--font-medium);
-}
-
-.day-tree__subjects {
-    padding: var(--space-2);
-}
-
-/* Subject Branch */
-.subject-branch {
-    margin-bottom: var(--space-2);
-}
-
-.subject-branch__header {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    padding: var(--space-2) var(--space-3);
-    background: var(--color-neutral-0);
-    border-radius: var(--radius-md);
-    margin-bottom: var(--space-1);
-}
-
-.subject-branch__icon {
-    font-size: 0.9rem;
-}
-
-.subject-branch__name {
-    font-weight: var(--font-semibold);
-    color: var(--color-neutral-800);
-    font-size: var(--text-sm);
-    flex: 1;
-}
-
-.subject-branch__count {
-    font-size: var(--text-xs);
-    color: var(--color-neutral-400);
-}
-
-/* Assignment Leaf */
+/* Task Card Style (Replacing the old lines) */
 .subject-branch__items {
-    margin-left: var(--space-6);
-    padding-left: var(--space-3);
-    border-left: 2px solid var(--color-neutral-200);
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
 }
 
 .assignment-leaf {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    padding: var(--space-1) var(--space-2);
-    font-size: var(--text-xs);
-    color: var(--color-neutral-600);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+    border: 1px solid var(--border-glass);
+    border-radius: 16px;
+    padding: 1.25rem;
+    position: relative;
+    transition: all 0.2s ease;
+    cursor: default;
+}
+
+.assignment-leaf:hover {
+    border-color: var(--primary-dim);
+    background: var(--bg-glass-hover);
+    transform: translateY(-2px);
+}
+
+.assignment-leaf::after {
+    /* Glow line at bottom */
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--primary-neon);
+    opacity: 0;
+    transition: 0.2s;
+    box-shadow: 0 0 10px var(--primary-neon);
+}
+
+.assignment-leaf:hover::after {
+    opacity: 0.5;
+}
+
+.assignment-leaf--test {
+    border-left: 3px solid var(--secondary-neon);
+}
+
+.assignment-leaf--test::after {
+    background: var(--secondary-neon);
+    box-shadow: 0 0 10px var(--secondary-neon);
 }
 
 .assignment-leaf__icon {
-    font-size: 0.8rem;
+    display: none;
+    /* Hide old icon */
 }
 
 .assignment-leaf__type {
-    color: var(--color-neutral-600);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-tertiary);
+    margin-bottom: 0.25rem;
+    display: block;
 }
 
-.assignment-leaf--test .assignment-leaf__type {
-    color: hsl(4, 85%, 50%);
-    font-weight: var(--font-medium);
+.assignment-leaf__content {
+    /* Assuming content is passed, if not I need to modify JSX */
 }
 
-.assignment-leaf--done {
-    opacity: 0.5;
-    text-decoration: line-through;
-}
-
-.assignment-leaf__done {
-    color: hsl(142, 70%, 45%);
-    font-weight: var(--font-bold);
-}
-
-.dashboard__empty {
+/* Subject Header inside Assignment Block */
+.subject-branch__header {
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: var(--space-8);
+    gap: 0.5rem;
+}
+
+.subject-branch__icon {
+    opacity: 0.7;
+}
+
+/* Empty State */
+.dashboard__empty {
     text-align: center;
-    color: var(--color-neutral-400);
+    padding: 3rem;
+    color: var(--text-tertiary);
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+    border: 1px dashed var(--border-glass);
 }
 
 .dashboard__empty span {
-    font-size: 3rem;
-    margin-bottom: var(--space-3);
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 1rem;
 }
 
-.dashboard__empty p {
-    margin: 0;
-    font-size: var(--text-sm);
-}
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   CHARTS
-   ───────────────────────────────────────────────────────────────────────────── */
-
-.dashboard__chart-container {
-    width: 100%;
-}
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   WARNINGS
-   ───────────────────────────────────────────────────────────────────────────── */
-
-.dashboard__warnings-list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-}
-
-.dashboard__warning {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--space-3);
-    padding: var(--space-3) var(--space-4);
-    border-radius: var(--radius-md);
-}
-
-.dashboard__warning--high {
-    background: hsl(4, 85%, 95%);
-    color: hsl(4, 85%, 35%);
-}
-
-.dashboard__warning--medium {
-    background: hsl(42, 90%, 94%);
-    color: hsl(42, 90%, 30%);
-}
-
-.dashboard__warning--low {
-    background: hsl(220, 20%, 95%);
-    color: hsl(220, 20%, 40%);
-}
-
-.dashboard__warning-icon {
-    font-size: 1rem;
-    flex-shrink: 0;
-}
-
-.dashboard__warning-message {
-    margin: 0;
-    font-size: var(--text-sm);
-    line-height: var(--leading-snug);
-}
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   QUICK ACTIONS
-   ───────────────────────────────────────────────────────────────────────────── */
-
-.dashboard__actions {
-    display: flex;
-    gap: var(--space-4);
-    margin-top: var(--space-8);
-    padding-top: var(--space-8);
-    border-top: var(--border-thin) solid var(--color-neutral-100);
-}
-
-.dashboard__action-btn {
-    text-decoration: none;
-}
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   RESPONSIVE
-   ───────────────────────────────────────────────────────────────────────────── */
-
-@media (max-width: 1024px) {
-    .dashboard__stats {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
+/* Responsive */
+@media (max-width: 1200px) {
     .dashboard__grid {
         grid-template-columns: 1fr;
     }
-
-    .dashboard__section--assignments,
-    .dashboard__section--subjects,
-    .dashboard__section--warnings {
-        grid-column: span 1;
-        grid-row: span 1;
-    }
 }
 
-@media (max-width: 640px) {
+/* Assignment Card Internals */
+.assignment-leaf__header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.leaf-badge {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.leaf-badge--primary {
+    background: rgba(0, 255, 163, 0.15);
+    color: var(--primary-neon);
+}
+
+.leaf-badge--warning {
+    background: rgba(191, 90, 242, 0.15);
+    /* Purple for tests */
+    color: var(--secondary-neon);
+}
+
+.leaf-badge--done {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-tertiary);
+}
+
+.assignment-leaf__body {
+    margin-bottom: 1.5rem;
+}
+
+.assignment-leaf__title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.assignment-leaf__subtitle {
+    font-size: 0.85rem;
+    color: var(--text-tertiary);
+    margin: 0;
+}
+
+.assignment-leaf__progress-container {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.assignment-leaf__progress-bar {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 10px currentColor;
+    /* Glow based on color set in inline style */
+}
+
+@media (max-width: 768px) {
     .dashboard {
-        padding: var(--space-4);
+        margin-left: 0;
+        /* Sidebar collapsed on mobile */
+        padding: 1rem;
+        padding-top: 5rem;
+        /* Space for mobile header/toggle */
     }
 
     .dashboard__header {
         flex-direction: column;
-        gap: var(--space-4);
+        align-items: flex-start;
+        gap: 1rem;
     }
 
-    .dashboard__date {
-        align-self: flex-start;
-    }
-
-    .dashboard__stats {
-        grid-template-columns: 1fr;
-    }
-
-    .dashboard__title {
-        font-size: var(--text-xl);
+    .stat-card__value {
+        font-size: 2rem;
     }
 }

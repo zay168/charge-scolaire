@@ -305,13 +305,30 @@ export function DashboardPage() {
                                                                 key={a.id}
                                                                 className={`assignment-leaf ${a.type === 'test' ? 'assignment-leaf--test' : ''} ${a.done ? 'assignment-leaf--done' : ''}`}
                                                             >
-                                                                <span className="assignment-leaf__icon">
-                                                                    {a.type === 'test' ? '📋' : '📝'}
-                                                                </span>
-                                                                <span className="assignment-leaf__type">
-                                                                    {a.type === 'test' ? 'Évaluation' : 'Devoir'}
-                                                                </span>
-                                                                {a.done && <span className="assignment-leaf__done">✓</span>}
+                                                                <div className="assignment-leaf__header">
+                                                                    <span className={`leaf-badge ${a.type === 'test' ? 'leaf-badge--warning' : 'leaf-badge--primary'}`}>
+                                                                        {a.type === 'test' ? 'Évaluation' : 'Devoir'}
+                                                                    </span>
+                                                                    {a.done && <span className="leaf-badge leaf-badge--done">Terminé</span>}
+                                                                </div>
+
+                                                                <div className="assignment-leaf__body">
+                                                                    <h4 className="assignment-leaf__title">{subject}</h4>
+                                                                    {/* Placeholder for content if we had it easily accessible */}
+                                                                    <p className="assignment-leaf__subtitle">
+                                                                        {a.type === 'test' ? 'Important • Coeff 3' : 'Travail personnel'}
+                                                                    </p>
+                                                                </div>
+
+                                                                <div className="assignment-leaf__progress-container">
+                                                                    <div
+                                                                        className="assignment-leaf__progress-bar"
+                                                                        style={{
+                                                                            width: a.done ? '100%' : '20%',
+                                                                            background: a.type === 'test' ? 'var(--secondary-neon)' : 'var(--primary-neon)'
+                                                                        }}
+                                                                    ></div>
+                                                                </div>
                                                             </div>
                                                         ))}
                                                     </div>
