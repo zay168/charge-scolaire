@@ -12,7 +12,6 @@ import { useWorkload } from '../contexts/WorkloadContext';
 import { LoadIndicator, LoadProgressBar } from '../components/ui/LoadIndicator';
 import { AssignmentCard, AssignmentCardSkeleton } from '../components/ui/AssignmentCard';
 import { DailyWorkloadChart, WeeklyWorkloadChart, SubjectDistributionChart } from '../components/charts/WorkloadChart';
-import LiquidGlass from '../components/ui/liquid-glass';
 import './DashboardPage.css';
 
 export function DashboardPage() {
@@ -155,7 +154,7 @@ export function DashboardPage() {
 
             {/* Stats Cards */}
             <section className="dashboard__stats">
-                <LiquidGlass className="stat-card stat-card--today" padding="1.5rem" cornerRadius={20}>
+                <article className="stat-card glass-panel stat-card--today">
                     <div className="stat-card__header">
                         <span className="stat-card__icon">📅</span>
                         <h3 className="stat-card__title">Aujourd'hui</h3>
@@ -172,9 +171,9 @@ export function DashboardPage() {
                         status={todayWorkload.status}
                         height={6}
                     />
-                </LiquidGlass>
+                </article>
 
-                <LiquidGlass className="stat-card stat-card--week" padding="1.5rem" cornerRadius={20}>
+                <article className="stat-card glass-panel stat-card--week">
                     <div className="stat-card__header">
                         <span className="stat-card__icon">📊</span>
                         <h3 className="stat-card__title">Cette semaine</h3>
@@ -191,9 +190,9 @@ export function DashboardPage() {
                         status={weekWorkload.status}
                         height={6}
                     />
-                </LiquidGlass>
+                </article>
 
-                <LiquidGlass className="stat-card stat-card--dst" padding="1.5rem" cornerRadius={20}>
+                <article className="stat-card glass-panel stat-card--dst">
                     <div className="stat-card__header">
                         <span className="stat-card__icon">📝</span>
                         <h3 className="stat-card__title">DSTs à venir</h3>
@@ -209,9 +208,9 @@ export function DashboardPage() {
                             ⚠️ {dstAnalysis.warnings.length} alertes
                         </div>
                     )}
-                </LiquidGlass>
+                </article>
 
-                <LiquidGlass className="stat-card stat-card--average" padding="1.5rem" cornerRadius={20}>
+                <article className="stat-card glass-panel stat-card--average">
                     <div className="stat-card__header">
                         <span className="stat-card__icon">📈</span>
                         <h3 className="stat-card__title">Charge moyenne</h3>
@@ -225,7 +224,7 @@ export function DashboardPage() {
                         showLabel
                         size="small"
                     />
-                </LiquidGlass>
+                </article>
             </section>
 
             {/* Main content grid */}
@@ -274,12 +273,9 @@ export function DashboardPage() {
                                 };
 
                                 return (
-                                    <LiquidGlass
+                                    <div
                                         key={day.date}
-                                        className={`day-tree day-tree--${status}`}
-                                        padding="1.5rem"
-                                        cornerRadius={24}
-                                        elasticity={0.1}
+                                        className={`day-tree glass-panel day-tree--${status}`}
                                     >
                                         <div className="day-tree__header">
                                             <div className="day-tree__date">
@@ -342,7 +338,7 @@ export function DashboardPage() {
                                                 </div>
                                             ))}
                                         </div>
-                                    </LiquidGlass>
+                                    </div>
                                 );
                             })
                         ) : (

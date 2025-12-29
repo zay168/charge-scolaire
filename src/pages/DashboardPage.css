@@ -65,21 +65,14 @@
 }
 
 .stat-card {
-    /* LiquidGlass handles background/border/shadow/backdrop */
-    /* background: var(--bg-glass); */
-    /* backdrop-filter: blur(var(--glass-blur)); */
-    /* border: 1px solid var(--border-glass); */
-    /* border-radius: 20px; */
-    padding: 0;
-    /* LiquidGlass handles padding prop */
+    /* glass-panel provides the background/border, we just add layout */
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    transition: transform 0.2s;
+    transition: transform 0.2s, border-color 0.2s;
     position: relative;
-    /* overflow: hidden; -- LiquidGlass needs overflow visible for effects sometimes, but it handles its own internal overflow */
-    border-radius: 20px;
-    /* Keep for layout but visual border is handled by Loop */
+    overflow: hidden;
 }
 
 .stat-card:hover {
@@ -223,14 +216,14 @@
 
 /* Day Block */
 .day-tree {
-    /* LiquidGlass handles container styles */
-    /* padding is passed as prop to LiquidGlass */
+    /* glass-panel provides background/border, we add padding */
+    padding: 1.5rem;
     transition: transform 0.2s ease;
 }
 
 .day-tree:hover {
     transform: translateY(-2px);
-    /* border-color handled by LiquidGlass */
+    border-color: var(--primary-neon);
 }
 
 .day-tree__header {
