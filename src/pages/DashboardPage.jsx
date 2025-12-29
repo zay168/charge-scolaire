@@ -133,7 +133,7 @@ export function DashboardPage() {
             <header className="dashboard__header">
                 <div className="dashboard__greeting">
                     <h1 className="dashboard__title">
-                        {greeting}, <span className="dashboard__name">{user?.firstName}</span> 👋
+                        {greeting}, <span className="dashboard__name">{user?.firstName || user?.lastName || 'utilisateur'}</span> 👋
                     </h1>
                     <p className="dashboard__subtitle">
                         {userType === 'teacher'

@@ -46,11 +46,16 @@
 
 body,
 html {
-  background-color: var(--bg-deep) !important;
-  color: var(--text-primary) !important;
+  background: #0a0a0f !important;
+  color: #ffffff !important;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   min-height: 100vh;
   overflow-x: hidden;
+}
+
+#root {
+  background: #0a0a0f;
+  min-height: 100vh;
 }
 
 /* Background gradient mesh */
@@ -70,12 +75,12 @@ body::before {
 
 /* UTILITIES */
 .glass-panel {
-  background: var(--bg-card);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--border-glass);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-  border-radius: var(--radius-lg);
+  background: rgba(30, 30, 40, 0.7) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border-radius: 20px;
 }
 
 .text-neon {

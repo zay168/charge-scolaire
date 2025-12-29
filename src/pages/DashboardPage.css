@@ -30,20 +30,20 @@
 .dashboard__title {
     font-size: 2.5rem;
     font-weight: 700;
-    color: var(--text-primary);
+    color: #ffffff;
     letter-spacing: -0.03em;
 }
 
 .dashboard__name {
-    background: linear-gradient(135deg, var(--primary-neon), var(--secondary-neon));
+    background: linear-gradient(135deg, #00FFA3, #BF5AF2);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
-    text-shadow: 0 0 30px rgba(0, 255, 163, 0.3);
 }
 
 .dashboard__subtitle {
     font-size: 1.1rem;
-    color: var(--text-secondary);
+    color: rgba(255, 255, 255, 0.7);
 }
 
 .dashboard__date {
