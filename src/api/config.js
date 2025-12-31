@@ -24,9 +24,9 @@ export const USE_REAL_API = import.meta.env.VITE_USE_REAL_API === 'true';
  * In production: use Railway backend (handles sessions correctly)
  * In development: use Vite proxy
  */
-export const ED_API_BASE = import.meta.env.PROD
+export const ED_API_BASE = import.meta.env.VITE_API_URL || (import.meta.env.PROD
     ? 'https://charge-scolaire-production.up.railway.app/api/ed'
-    : '/api/ed';
+    : '/api/ed');
 
 /**
  * API Version (from École Directe)

@@ -108,7 +108,7 @@
 
 .stat-card__title {
     font-size: 0.9rem;
-    color: var(--text-secondary);
+    color: rgba(255, 255, 255, 0.7);
     font-weight: 500;
     letter-spacing: 0.02em;
 }
@@ -120,14 +120,14 @@
 .stat-card__value {
     font-size: 2.5rem;
     font-weight: 700;
-    color: var(--text-primary);
+    color: #ffffff;
     line-height: 1;
     margin-bottom: 0.25rem;
 }
 
 .stat-card__label {
     font-size: 0.85rem;
-    color: var(--text-tertiary);
+    color: rgba(255, 255, 255, 0.5);
 }
 
 /* Variant styles */
@@ -238,7 +238,7 @@
 .day-tree__date {
     font-size: 1.1rem;
     font-weight: 600;
-    color: var(--text-primary);
+    color: #ffffff;
 }
 
 .day-tree__status {
@@ -246,7 +246,7 @@
     padding: 0.2rem 0.6rem;
     border-radius: 100px;
     background: rgba(255, 255, 255, 0.1);
-    color: var(--text-tertiary);
+    color: rgba(255, 255, 255, 0.5);
 }
 
 .day-tree__status--heading {
@@ -398,13 +398,13 @@
 .assignment-leaf__title {
     font-size: 1.1rem;
     font-weight: 600;
-    color: var(--text-primary);
+    color: #ffffff;
     margin-bottom: 0.25rem;
 }
 
 .assignment-leaf__subtitle {
     font-size: 0.85rem;
-    color: var(--text-tertiary);
+    color: rgba(255, 255, 255, 0.5);
     margin: 0;
 }
 
