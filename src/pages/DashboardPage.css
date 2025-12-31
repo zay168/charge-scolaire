@@ -108,7 +108,7 @@
 
 .stat-card__title {
     font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 0.9);
     font-weight: 500;
     letter-spacing: 0.02em;
 }
@@ -127,7 +127,7 @@
 
 .stat-card__label {
     font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.7);
 }
 
 /* Variant styles */
@@ -246,7 +246,7 @@
     padding: 0.2rem 0.6rem;
     border-radius: 100px;
     background: rgba(255, 255, 255, 0.1);
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.7);
 }
 
 .day-tree__status--heading {
@@ -376,19 +376,22 @@
 }
 
 .leaf-badge--primary {
-    background: rgba(0, 255, 163, 0.15);
-    color: var(--primary-neon);
+    background: rgba(0, 255, 163, 0.2);
+    color: #ffffff;
+    border: 1px solid rgba(0, 255, 163, 0.5);
 }
 
 .leaf-badge--warning {
-    background: rgba(191, 90, 242, 0.15);
+    background: rgba(191, 90, 242, 0.2);
     /* Purple for tests */
-    color: var(--secondary-neon);
+    color: #ffffff;
+    border: 1px solid rgba(191, 90, 242, 0.5);
 }
 
 .leaf-badge--done {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--text-tertiary);
+    background: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .assignment-leaf__body {
@@ -404,7 +407,7 @@
 
 .assignment-leaf__subtitle {
     font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.8);
     margin: 0;
 }
 
