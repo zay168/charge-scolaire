@@ -50,7 +50,7 @@ html {
 }
 
 body {
-  background: transparent !important;
+  background: #050505 !important;
   color: #ffffff !important;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   min-height: 100vh;
@@ -64,7 +64,7 @@ body {
   min-height: 100vh;
 }
 
-/* Background gradient mesh */
+/* Background gradient mesh (CSS ONLY - RELIABLE) */
 body::before {
   content: '';
   position: fixed;
@@ -72,12 +72,13 @@ body::before {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: url('/bg-glass.png') no-repeat center center;
-  background-size: cover;
+  background-color: #050505;
+  background-image:
+    radial-gradient(circle at 15% 25%, rgba(0, 255, 163, 0.1) 0%, transparent 40%),
+    radial-gradient(circle at 85% 75%, rgba(191, 90, 242, 0.1) 0%, transparent 40%);
   pointer-events: none;
   z-index: -1;
-  opacity: 0.6;
-  /* Slight dim to keep text readable */
+  opacity: 1;
 }
 
 /* UTILITIES */
