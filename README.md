@@ -1,23 +1,43 @@
 # Charge Scolaire 📚
 
-> **L'intelligence artificielle au service de votre réussite scolaire.**
-
-**Charge Scolaire** est une application web innovante conçue pour optimiser la gestion de la vie étudiante. Elle agit comme une "surcouche intelligente" au-dessus des plateformes scolaires classiques (comme École Directe), offrant une expérience utilisateur moderne, fluide et prédictive.
-
-## 🌟 Pourquoi Charge Scolaire ?
-
-Les interfaces scolaires classiques sont souvent lentes, datées et complexes. Charge Scolaire change la donne :
-
-*   **📊 Tableau de Bord Unifié** : Vos notes, devoirs et emploi du temps en un seul coup d'œil.
-*   **🧠 Analyse Prédictive** : Estimation de vos moyennes futures et conseils de travail personnalisés.
-*   **🎨 UI/UX Premium** : Une interface sombre, épurée et agréable à utiliser au quotidien.
-*   **🔔 Notifications Intelligentes** : Rappels pour les devoirs importants et les changements de salle.
-
-## 🛠️ Stack Technique
-
-*   **Frontend** : React / Next.js pour une réactivité optimale.
-*   **Backend** : Node.js pour la gestion des données.
-*   **API** : Intégration non-officielle avec les services scolaires.
+<div align="center">
+  <h3> The Intelligent OS for Student Success.</h3>
+  <p>Stop managing your school life with tools from the past. Charge Scolaire is a smart, predictive layer over your existing school data.</p>
+</div>
 
 ---
-*Développé pour les étudiants, par un étudiant. [Zayd](https://github.com/zay168)*
+
+## 🌟 Why Charge Scolaire?
+
+Most school dashboards are just data tables. **Charge Scolaire** turns that data into actionable insights with a premium, app-like experience.
+
+*   **📊 Omni-Dashboard**: Grades, homework, and schedule in one unified, clutter-free view.
+*   **🔮 Predictive Analytics**: Powered by `Recharts` to visualize your academic trajectory and simulate future grades.
+*   **⚡ Instant Interactions**: Built with `Framer Motion` for fluid, 60fps animations.
+*   **🔐 Privacy First**: Your data stays yours. Secure connection via Supabase.
+
+## 🛠️ The Stack
+
+This project allows me to experiment with modern web graph and animation libraries.
+
+*   **Frontend**: React + Vite (Fast HMR)
+*   **Styling**: TailwindCSS (Utility-first)
+*   **Animations**: Framer Motion
+*   **Backend**: Supabase (PostgreSQL + Auth)
+*   **Icons**: Lucide React
+
+## 🚀 Getting Started
+
+```bash
+# Clone the intelligent layer
+git clone https://github.com/zay168/charge-scolaire.git
+
+# Install dependencies
+npm install
+
+# Run the dev server
+npm run dev
+```
+
+---
+*Built with ❤️ in Paris by [Zayd](https://github.com/zay168)*
