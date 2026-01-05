@@ -1,17 +1,13 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   DASHBOARD PAGE STYLES (NEON GLASS V2)
+   DASHBOARD PAGE STYLES (NEON GLASS V3 - FIXED DARK MODE)
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .dashboard {
-    /* Layout: Sidebar is fixed, so we need margin-left */
-    /* If sidebar is expanded (260px) + padding */
     padding: 2rem;
     max-width: 1600px;
+    margin: 0 auto;
+    color: var(--text-primary);
 }
-
-/* If sidebar collapsed: parent component handles class toggle on main, 
-   but since CSS modules aren't used, we rely on AppLayout padding. 
-   Assuming standard layout. */
 
 /* ── HEADER ── */
 .dashboard__header {
@@ -30,67 +26,78 @@
 .dashboard__title {
     font-size: 2.5rem;
     font-weight: 700;
-    color: #ffffff;
+    color: #ffffff !important;
+    /* Forces white text */
     letter-spacing: -0.03em;
 }
 
 .dashboard__name {
-    background: linear-gradient(135deg, #00FFA3, #BF5AF2);
+    background: linear-gradient(135deg, var(--primary-neon), var(--secondary-neon));
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 10px rgba(0, 255, 163, 0.3));
 }
 
 .dashboard__subtitle {
     font-size: 1.1rem;
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 0.7) !important;
 }
 
 .dashboard__date {
     font-size: 1rem;
-    color: var(--text-tertiary);
-    background: var(--bg-glass);
-    padding: 0.5rem 1rem;
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.6rem 1.2rem;
     border-radius: 50px;
     border: 1px solid var(--border-glass);
     backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 /* ── STATS GRID ── */
 .dashboard__stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1.5rem;
-    margin-bottom: 3rem;
+    margin-bottom: 2.5rem;
 }
 
 .stat-card {
-    /* glass-panel provides the background/border, we just add layout */
-    padding: 1.5rem;
+    /* Explicit dark background fallback */
+    background: #15151e !important;
+    /* Glass overlay */
+    background: linear-gradient(145deg, rgba(30, 30, 40, 0.9), rgba(20, 20, 30, 0.95)) !important;
+    border: 1px solid var(--border-glass) !important;
+    border-radius: 24px;
+    padding: 1.75rem;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    transition: transform 0.2s, border-color 0.2s;
+    gap: 1.25rem;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     position: relative;
     overflow: hidden;
+    /* Strong shadow */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    color: #ffffff !important;
 }
 
 .stat-card:hover {
-    transform: translateY(-2px);
-    border-color: var(--primary-dim);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+    border-color: rgba(0, 255, 163, 0.3);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 255, 163, 0.1);
 }
 
 /* Animated glow blob behind icon */
 .stat-card::before {
     content: '';
     position: absolute;
-    top: -50px;
-    right: -50px;
-    width: 100px;
-    height: 100px;
-    background: radial-gradient(circle, rgba(0, 255, 163, 0.15) 0%, transparent 70%);
-    filter: blur(20px);
+    top: -60px;
+    right: -60px;
+    width: 140px;
+    height: 140px;
+    background: radial-gradient(circle, rgba(0, 255, 163, 0.08) 0%, transparent 70%);
+    filter: blur(30px);
     z-index: 0;
 }
 
@@ -102,15 +109,14 @@
 }
 
 .stat-card__icon {
-    font-size: 1.5rem;
-    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.2));
+    font-size: 1.75rem;
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.1));
 }
 
 .stat-card__title {
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8) !important;
     font-weight: 500;
-    letter-spacing: 0.02em;
 }
 
 .stat-card__content {
@@ -118,112 +124,125 @@
 }
 
 .stat-card__value {
-    font-size: 2.5rem;
+    font-size: 3rem;
     font-weight: 700;
-    color: #ffffff;
+    color: #ffffff !important;
     line-height: 1;
     margin-bottom: 0.25rem;
+    letter-spacing: -0.02em;
 }
 
 .stat-card__label {
-    font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.5) !important;
 }
 
 /* Variant styles */
 .stat-card--today .stat-card__value {
-    color: var(--primary-neon);
+    color: var(--primary-neon) !important;
+    text-shadow: 0 0 20px rgba(0, 255, 163, 0.3);
 }
 
 .stat-card--dst .stat-card__value {
-    color: var(--status-warning);
+    color: #ffd700 !important;
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
 }
 
 .stat-card--dst::before {
-    background: radial-gradient(circle, rgba(255, 214, 10, 0.15) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
 }
 
 .stat-card__warning {
     margin-top: 0.5rem;
-    font-size: 0.8rem;
-    color: var(--status-warning);
-    background: rgba(255, 214, 10, 0.1);
-    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    color: #ffd700 !important;
+    background: rgba(255, 215, 0, 0.1);
+    padding: 0.5rem 0.8rem;
     border-radius: 8px;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
+    border: 1px solid rgba(255, 215, 0, 0.2);
 }
 
 /* ── MAIN GRID ── */
 .dashboard__grid {
     display: grid;
     grid-template-columns: 2fr 1fr;
-    /* 2/3 Charts+Assignments, 1/3 Subjects */
     gap: 2rem;
     align-items: start;
 }
 
 .dashboard__section {
-    background: var(--bg-glass);
+    background: #14141d !important;
+    /* Force dark background */
     border: 1px solid var(--border-glass);
-    border-radius: 24px;
-    padding: 1.5rem;
+    border-radius: 28px;
+    padding: 2rem;
     margin-bottom: 2rem;
-    /* Spacing if stacked */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
 .dashboard__section-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
 }
 
 .dashboard__section-title {
-    font-size: 1.2rem;
-    color: var(--text-primary);
+    font-size: 1.25rem;
+    color: #ffffff !important;
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    font-weight: 600;
 }
 
 .dashboard__section-link {
-    font-size: 0.9rem;
-    color: var(--primary-neon);
-    font-weight: 500;
+    font-size: 0.95rem;
+    color: var(--primary-neon) !important;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    background: rgba(0, 255, 163, 0.1);
+    border-radius: 20px;
+    transition: all 0.2s;
 }
 
 .dashboard__section-link:hover {
-    text-decoration: underline;
-    text-decoration-color: var(--primary-neon);
+    background: rgba(0, 255, 163, 0.2);
+    box-shadow: 0 0 15px rgba(0, 255, 163, 0.2);
 }
 
 .dashboard__chart-container {
-    /* Give charts a container that fits the glass theme */
-    padding: 1rem;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 16px;
-    position: relative;
+    padding: 1.5rem;
+    background: #0a0a0f !important;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* ── ASSIGNMENTS LIST (Transforming to Cards) ── */
+/* ── ASSIGNMENTS LIST ── */
 .dashboard__daily-tree {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
 }
 
-/* Day Block */
 .day-tree {
-    /* glass-panel provides background/border, we add padding */
+    background: #1a1a24 !important;
+    /* Force dark bg */
+    border: 1px solid var(--border-glass);
+    border-radius: 24px;
     padding: 1.5rem;
-    transition: transform 0.2s ease;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 .day-tree:hover {
-    transform: translateY(-2px);
-    border-color: var(--primary-neon);
+    transform: translateY(-3px);
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .day-tree__header {
@@ -231,123 +250,179 @@
     justify-content: space-between;
     align-items: baseline;
     margin-bottom: 1.5rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid var(--border-glass);
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .day-tree__date {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #ffffff;
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+}
+
+.day-tree__day-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #ffffff !important;
+    text-transform: capitalize;
+}
+
+.day-tree__full-date {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.6) !important;
 }
 
 .day-tree__status {
-    font-size: 0.75rem;
-    padding: 0.2rem 0.6rem;
+    font-size: 0.8rem;
+    padding: 0.3rem 0.8rem;
     border-radius: 100px;
     background: rgba(255, 255, 255, 0.1);
-    color: rgba(255, 255, 255, 0.7);
+    color: #ffffff !important;
+    font-weight: 600;
+    letter-spacing: 0.02em;
 }
 
-.day-tree__status--heading {
-    color: var(--status-warning);
-    background: rgba(255, 214, 10, 0.1);
+/* Subject Branch Styles */
+.subject-branch {
+    margin-bottom: 1.5rem;
 }
 
-/* Task Card Style (Replacing the old lines) */
-.subject-branch__items {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1rem;
+.subject-branch:last-child {
+    margin-bottom: 0;
 }
 
-.assignment-leaf {
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
-    border: 1px solid var(--border-glass);
-    border-radius: 16px;
-    padding: 1.25rem;
-    position: relative;
-    transition: all 0.2s ease;
-    cursor: default;
-}
-
-.assignment-leaf:hover {
-    border-color: var(--primary-dim);
-    background: var(--bg-glass-hover);
-    transform: translateY(-2px);
-}
-
-.assignment-leaf::after {
-    /* Glow line at bottom */
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: var(--primary-neon);
-    opacity: 0;
-    transition: 0.2s;
-    box-shadow: 0 0 10px var(--primary-neon);
-}
-
-.assignment-leaf:hover::after {
-    opacity: 0.5;
-}
-
-.assignment-leaf--test {
-    border-left: 3px solid var(--secondary-neon);
-}
-
-.assignment-leaf--test::after {
-    background: var(--secondary-neon);
-    box-shadow: 0 0 10px var(--secondary-neon);
-}
-
-.assignment-leaf__icon {
-    display: none;
-    /* Hide old icon */
-}
-
-.assignment-leaf__type {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--text-tertiary);
-    margin-bottom: 0.25rem;
-    display: block;
-}
-
-.assignment-leaf__content {
-    /* Assuming content is passed, if not I need to modify JSX */
-}
-
-/* Subject Header inside Assignment Block */
 .subject-branch__header {
-    margin-bottom: 0.75rem;
-    font-size: 0.9rem;
-    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.75rem;
+    /* Ensure gap between icon/name/count */
 }
 
 .subject-branch__icon {
-    opacity: 0.7;
+    font-size: 1.2rem;
+}
+
+.subject-branch__name {
+    font-weight: 600;
+    color: #ffffff !important;
+    /* Fix invisible text */
+    letter-spacing: 0.02em;
+}
+
+.subject-branch__count {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.5) !important;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.1rem 0.6rem;
+    border-radius: 12px;
+}
+
+.subject-branch__items {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
+/* Assignment Leaf */
+.assignment-leaf {
+    background: #0f0f13 !important;
+    /* Very dark background */
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 16px;
+    padding: 1.5rem;
+    transition: all 0.2s ease;
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+}
+
+.assignment-leaf:hover {
+    background: #14141a !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+    transform: translateY(-2px);
+}
+
+.assignment-leaf--test {
+    border-left: 3px solid var(--secondary-neon) !important;
+    background: linear-gradient(90deg, rgba(191, 90, 242, 0.05), rgba(15, 15, 19, 1)) !important;
+}
+
+.assignment-leaf__header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.leaf-badge {
+    font-size: 0.7rem;
+    padding: 0.35rem 0.9rem;
+    border-radius: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.leaf-badge--primary {
+    background: rgba(0, 255, 163, 0.1);
+    color: var(--primary-neon) !important;
+    border: 1px solid rgba(0, 255, 163, 0.2);
+}
+
+.leaf-badge--warning {
+    background: rgba(191, 90, 242, 0.1);
+    color: var(--secondary-neon) !important;
+    border: 1px solid rgba(191, 90, 242, 0.2);
+}
+
+.leaf-badge--done {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.assignment-leaf__title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ffffff !important;
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+}
+
+.assignment-leaf__subtitle {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6) !important;
+    margin: 0;
+}
+
+.assignment-leaf__progress-container {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    margin-top: 1.25rem;
+    overflow: hidden;
+}
+
+.assignment-leaf__progress-bar {
+    height: 100%;
+    border-radius: 2px;
+    box-shadow: 0 0 10px currentColor;
 }
 
 /* Empty State */
 .dashboard__empty {
     text-align: center;
-    padding: 3rem;
-    color: var(--text-tertiary);
+    padding: 4rem;
+    color: rgba(255, 255, 255, 0.5) !important;
     background: rgba(0, 0, 0, 0.2);
-    border-radius: 20px;
-    border: 1px dashed var(--border-glass);
+    border-radius: 24px;
+    border: 2px dashed rgba(255, 255, 255, 0.05);
 }
 
 .dashboard__empty span {
-    font-size: 2rem;
+    font-size: 3rem;
     display: block;
     margin-bottom: 1rem;
 }
@@ -359,90 +434,19 @@
     }
 }
 
-/* Assignment Card Internals */
-.assignment-leaf__header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-}
-
-.leaf-badge {
-    font-size: 0.7rem;
-    padding: 0.25rem 0.75rem;
-    border-radius: 6px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-.leaf-badge--primary {
-    background: rgba(0, 255, 163, 0.2);
-    color: #ffffff;
-    border: 1px solid rgba(0, 255, 163, 0.5);
-}
-
-.leaf-badge--warning {
-    background: rgba(191, 90, 242, 0.2);
-    /* Purple for tests */
-    color: #ffffff;
-    border: 1px solid rgba(191, 90, 242, 0.5);
-}
-
-.leaf-badge--done {
-    background: rgba(255, 255, 255, 0.15);
-    color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.assignment-leaf__body {
-    margin-bottom: 1.5rem;
-}
-
-.assignment-leaf__title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #ffffff;
-    margin-bottom: 0.25rem;
-}
-
-.assignment-leaf__subtitle {
-    font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.8);
-    margin: 0;
-}
-
-.assignment-leaf__progress-container {
-    width: 100%;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 2px;
-    overflow: hidden;
-}
-
-.assignment-leaf__progress-bar {
-    height: 100%;
-    border-radius: 2px;
-    transition: width 0.5s ease;
-    box-shadow: 0 0 10px currentColor;
-    /* Glow based on color set in inline style */
-}
-
 @media (max-width: 768px) {
     .dashboard {
-        margin-left: 0;
-        /* Sidebar collapsed on mobile */
-        padding: 1rem;
+        padding: 1.5rem;
         padding-top: 5rem;
-        /* Space for mobile header/toggle */
     }
 
     .dashboard__header {
         flex-direction: column;
         align-items: flex-start;
-        gap: 1rem;
+        gap: 1.5rem;
     }
 
     .stat-card__value {
-        font-size: 2rem;
+        font-size: 2.5rem;
     }
 }

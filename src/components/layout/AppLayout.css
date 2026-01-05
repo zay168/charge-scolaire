@@ -5,7 +5,9 @@
 .app-layout {
     display: flex;
     min-height: 100vh;
-    /* Background is on body */
+    background: #050505 !important;
+    /* Forces dark background everywhere */
+    color: #ffffff;
 }
 
 .app-layout__main {

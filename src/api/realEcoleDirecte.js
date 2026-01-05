@@ -16,7 +16,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { ED_API_BASE } from './config.js';
+import { ED_API_BASE, getElectronHeaders } from './config.js';
 
 const API_VERSION = '4.75.0';
 
@@ -315,6 +315,9 @@ class RealEcoleDirecteClient {
             const response = await fetch(`${ED_API_BASE}/login.awp?gtk=1&v=${API_VERSION}`, {
                 method: 'GET',
                 credentials: 'include',
+                headers: {
+                    ...getElectronHeaders(),
+                },
             });
 
             const gtkHeader = response.headers.get('x-gtk-token');
@@ -433,6 +436,7 @@ class RealEcoleDirecteClient {
             // Build headers - only include tokens if they have values
             const headers = {
                 'Content-Type': 'application/x-www-form-urlencoded',
+                ...getElectronHeaders(), // Add Origin/Referer/User-Agent for Electron
             };
             // Forward Session ID if available
             if (this.sessionId) headers['X-Session-Id'] = this.sessionId;
@@ -807,6 +811,7 @@ class RealEcoleDirecteClient {
 
     /**
      * Logout and clear session
+     * Clears CN/CV to force QCM on next login
      */
     logout() {
         // Abort all pending requests
@@ -814,11 +819,28 @@ class RealEcoleDirecteClient {
         this.abortControllers = [];
 
         this.token = null;
+        this.token2fa = null;
         this.gtkToken = null;
         this.account = null;
         this.modules = [];
         this.pendingQCM = null;
         this.qcmCredentials = null;
+        this.savedCnCv = null;
+
+        // Clear stored credentials and access token
+        this.clearAccessToken();
+
+        // Clear CN/CV data (forces QCM on next login)
+        localStorage.removeItem('ed_cn_cv');
+        localStorage.removeItem('A2FInfo');
+        localStorage.removeItem('ed_device_uuid');
+
+        // Clear Electron cookies if available
+        if (typeof window !== 'undefined' && window.electronAPI?.clearCookies) {
+            window.electronAPI.clearCookies().catch(() => { });
+        }
+
+        console.log('🚪 Logged out and cleared all credentials + CN/CV');
     }
 
     /**
@@ -975,20 +997,33 @@ class RealEcoleDirecteClient {
 
     /**
      * Logout and clear all session data
+     * Clears CN/CV to force QCM on next login
      */
     logout() {
         this.token = null;
         this.token2fa = null;
+        this.gtkToken = null;
         this.account = null;
         this.modules = [];
         this.pendingQCM = null;
         this.qcmCredentials = null;
+        this.savedCnCv = null;
 
         // Clear stored credentials and access token
         this.clearStoredCredentials();
         this.clearAccessToken();
 
-        console.log('🚪 Logged out and cleared all credentials');
+        // Clear CN/CV data (forces QCM on next login)
+        localStorage.removeItem('ed_cn_cv');
+        localStorage.removeItem('A2FInfo');
+        localStorage.removeItem('ed_device_uuid');
+
+        // Clear Electron cookies if available
+        if (typeof window !== 'undefined' && window.electronAPI?.clearCookies) {
+            window.electronAPI.clearCookies().catch(() => { });
+        }
+
+        console.log('🚪 Logged out and cleared all credentials + CN/CV');
     }
 
     /**

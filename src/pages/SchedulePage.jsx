@@ -179,63 +179,88 @@ export function SchedulePage() {
             }
         });
 
-        // Detect overlapping courses and assign columns
-        let groupIdCounter = 0;
+        // Detect overlapping courses using a column-packing algorithm
         Object.keys(grouped).forEach(dateStr => {
             const entries = grouped[dateStr];
             if (entries.length === 0) return;
 
-            // Sort by start time, then by subject for consistency
+            // Sort by start time, then duration (longer first usually packs better), then subject
             entries.sort((a, b) => {
                 if (a.startMinutes !== b.startMinutes) return a.startMinutes - b.startMinutes;
+                if (a.endMinutes !== b.endMinutes) return (b.endMinutes - b.startMinutes) - (a.endMinutes - a.startMinutes);
                 return (a.subject || '').localeCompare(b.subject || '');
             });
 
-            // Initialize all entries
+            // 1. Identify disjoint clusters
+            const clusters = [];
+            let currentCluster = [];
+            let clusterEnd = -1;
+
             entries.forEach(entry => {
-                entry.column = 0;
-                entry.totalColumns = 1;
-                entry.groupId = null;
-            });
-
-            // Find groups of overlapping courses
-            const processed = new Set();
-
-            for (let i = 0; i < entries.length; i++) {
-                if (processed.has(i)) continue;
-
-                const current = entries[i];
-                const group = [{ index: i, entry: current }];
-                processed.add(i);
-
-                // Find all entries that overlap with any entry in the group
-                for (let j = i + 1; j < entries.length; j++) {
-                    if (processed.has(j)) continue;
-
-                    const other = entries[j];
-
-                    // Check if other overlaps with any entry in the group
-                    const overlaps = group.some(({ entry: groupEntry }) =>
-                        groupEntry.startMinutes < other.endMinutes &&
-                        groupEntry.endMinutes > other.startMinutes
-                    );
-
-                    if (overlaps) {
-                        group.push({ index: j, entry: other });
-                        processed.add(j);
+                if (currentCluster.length === 0) {
+                    currentCluster.push(entry);
+                    clusterEnd = entry.endMinutes;
+                } else {
+                    // Check if this entry overlaps with the current cluster
+                    // Ideally, we check if it overlaps with ANY entry in the cluster,
+                    // but since they are sorted by start time, we just need to check if 
+                    // this entry starts before the cluster ends.
+                    if (entry.startMinutes < clusterEnd) {
+                        currentCluster.push(entry);
+                        clusterEnd = Math.max(clusterEnd, entry.endMinutes);
+                    } else {
+                        // New cluster
+                        clusters.push(currentCluster);
+                        currentCluster = [entry];
+                        clusterEnd = entry.endMinutes;
                     }
                 }
+            });
+            if (currentCluster.length > 0) clusters.push(currentCluster);
 
-                // If group has multiple entries, assign columns and groupId
-                if (group.length > 1) {
-                    const currentGroupId = groupIdCounter++;
-                    group.forEach(({ entry }, idx) => {
-                        entry.column = idx;
-                        entry.totalColumns = group.length;
-                        entry.groupId = currentGroupId;
-                    });
+            // 2. Pack each cluster into columns
+            let groupIdCounter = 0;
+
+            clusters.forEach(cluster => {
+                if (cluster.length === 1) {
+                    // Single event, simple case
+                    cluster[0].column = 0;
+                    cluster[0].totalColumns = 1;
+                    cluster[0].groupId = null;
+                    return;
                 }
-            }
+
+                // Complex packing for overlapping events
+                const columns = []; // Array of arrays of events
+                const currentGroupId = groupIdCounter++;
+
+                cluster.forEach(entry => {
+                    entry.groupId = currentGroupId;
+
+                    // Find first column that fits
+                    let placed = false;
+                    for (let i = 0; i < columns.length; i++) {
+                        const lastInCol = columns[i][columns[i].length - 1];
+                        if (lastInCol.endMinutes <= entry.startMinutes) {
+                            columns[i].push(entry);
+                            entry.column = i;
+                            placed = true;
+                            break;
+                        }
+                    }
+
+                    if (!placed) {
+                        columns.push([entry]);
+                        entry.column = columns.length - 1;
+                    }
+                });
+
+                // Set total columns for width calculation
+                const totalCols = columns.length;
+                cluster.forEach(entry => {
+                    entry.totalColumns = totalCols;
+                });
+            });
         });
 
         return grouped;

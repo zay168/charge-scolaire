@@ -20,18 +20,40 @@ export const API_MODE = import.meta.env.VITE_API_MODE || 'mock';
 export const USE_REAL_API = import.meta.env.VITE_USE_REAL_API === 'true';
 
 /**
- * École Directe API base URL
- * In production: use Railway backend (handles sessions correctly)
- * In development: use Vite proxy
+ * Check if running in Electron
  */
-export const ED_API_BASE = import.meta.env.VITE_API_URL || (import.meta.env.PROD
-    ? 'https://charge-scolaire-production.up.railway.app/api/ed'
-    : '/api/ed');
+export const isElectron = typeof navigator !== 'undefined' && navigator.userAgent.toLowerCase().includes('electron');
+
+/**
+ * École Directe API base URL
+ * - Electron: Direct API (main.cjs handles GTK cookies via webRequest)
+ * - Web Production: Railway backend (handles sessions)
+ * - Development: Vite proxy
+ */
+export const ED_API_BASE = isElectron
+    ? 'https://api.ecoledirecte.com/v3'
+    : (import.meta.env.PROD
+        ? 'https://charge-scolaire-production.up.railway.app/api/ed'
+        : (import.meta.env.VITE_API_URL || '/api/ed'));
 
 /**
  * API Version (from École Directe)
  */
 export const API_VERSION = '4.69.1';
+
+/**
+ * Get required headers for direct API calls in Electron
+ * These headers are normally handled by the proxy or extension
+ */
+export function getElectronHeaders() {
+    if (!isElectron) return {};
+
+    return {
+        'Origin': 'https://www.ecoledirecte.com',
+        'Referer': 'https://www.ecoledirecte.com/',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+    };
+}
 
 /**
  * Determine which client to use
@@ -51,5 +73,7 @@ export default {
     USE_REAL_API,
     ED_API_BASE,
     API_VERSION,
+    isElectron,
+    getElectronHeaders,
     getApiMode,
 };

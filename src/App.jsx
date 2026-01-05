@@ -4,7 +4,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { WorkloadProvider } from './contexts/WorkloadContext';
 import { AppLayout } from './components/layout/AppLayout';
@@ -33,9 +33,13 @@ import DSTBoardEditor from './pages/admin/DSTBoardEditor';
 import './styles/design-system.css';
 import './App.css';
 
+// Detect Electron: use HashRouter for file:// protocol, BrowserRouter for web
+const isElectron = navigator.userAgent.toLowerCase().includes('electron');
+const Router = isElectron ? HashRouter : BrowserRouter;
+
 function App() {
   return (
-    <BrowserRouter>
+    <Router>
       <AuthProvider>
         <WorkloadProvider>
           <Routes>
@@ -79,7 +83,7 @@ function App() {
           </Routes>
         </WorkloadProvider>
       </AuthProvider>
-    </BrowserRouter>
+    </Router>
   );
 }
 

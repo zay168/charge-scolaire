@@ -60,8 +60,10 @@ body {
 }
 
 #root {
-  background: #0a0a0f;
+  background: #050505 !important;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Background gradient mesh (CSS ONLY - RELIABLE) */

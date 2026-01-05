@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * GRADES PAGE - COMPLETE REDESIGN
+ * GRADES PAGE - COMPLETE REDESIGN (NEON DARK)
  * Clean, modern, premium UI for displaying student grades
  * ═══════════════════════════════════════════════════════════════════════════
  */
@@ -9,35 +9,35 @@ import { useState, useEffect, useMemo } from 'react';
 import ecoleDirecteClient from '../api/ecoleDirecte';
 import './GradesPage.css';
 
-// Subject colors
+// Premium Neon Subject Colors
 const SUBJECT_COLORS = {
-    'MATHS': '#3B82F6',
-    'MATHEMATIQUES': '#3B82F6',
-    'FRANCAIS': '#8B5CF6',
-    'FRANÇAIS': '#8B5CF6',
-    'ANGLAIS': '#EC4899',
-    'ESPAGNOL': '#F59E0B',
-    'ALLEMAND': '#F97316',
-    'HISTOIRE': '#10B981',
-    'GEOGRAPHIE': '#10B981',
-    'SVT': '#22C55E',
-    'SCIENCES': '#22C55E',
-    'PHYSIQUE': '#06B6D4',
-    'CHIMIE': '#06B6D4',
-    'EPS': '#EF4444',
-    'TECHNOLOGIE': '#6366F1',
-    'ARTS': '#F472B6',
-    'MUSIQUE': '#A855F7',
-    'PHILOSOPHIE': '#78716C',
-    'SES': '#84CC16',
-    'NSI': '#14B8A6',
-    'SNT': '#14B8A6',
-    'ITALIEN': '#059669',
-    'ARABE': '#D97706',
-    'LATIN': '#7C3AED',
-    'HUMANITES': '#6366F1',
-    'SECTION': '#0EA5E9',
-    'default': '#6B7280',
+    'MATHS': '#2997FF', // Blue
+    'MATHEMATIQUES': '#2997FF',
+    'FRANCAIS': '#BF5AF2', // Purple
+    'FRANÇAIS': '#BF5AF2',
+    'ANGLAIS': '#FF375F', // Pink
+    'ESPAGNOL': '#FFD60A', // Yellow/Gold
+    'ALLEMAND': '#FF9F0A', // Orange
+    'HISTOIRE': '#32D74B', // Green
+    'GEOGRAPHIE': '#32D74B',
+    'SVT': '#30D158', // Green
+    'SCIENCES': '#30D158',
+    'PHYSIQUE': '#64D2FF', // Cyan
+    'CHIMIE': '#64D2FF',
+    'EPS': '#FF453A', // Red
+    'TECHNOLOGIE': '#5E5CE6', // Indigo
+    'ARTS': '#FF2D55', // Pink Red
+    'MUSIQUE': '#AC8E68', // Brown/Gold
+    'PHILOSOPHIE': '#98989D', // Gray
+    'SES': '#30D158',
+    'NSI': '#64D2FF',
+    'SNT': '#64D2FF',
+    'ITALIEN': '#32D74B',
+    'ARABE': '#FFD60A',
+    'LATIN': '#BF5AF2',
+    'HUMANITES': '#5E5CE6',
+    'SECTION': '#0A84FF',
+    'default': '#8E8E93',
 };
 
 const getSubjectColor = (subject) => {
@@ -50,15 +50,16 @@ const getSubjectColor = (subject) => {
 };
 
 const getGradeColor = (value, max = 20) => {
-    if (value === null) return 'var(--text-secondary)';
+    if (value === null) return 'rgba(255, 255, 255, 0.4)';
     const percent = (value / max) * 100;
-    if (percent >= 70) return '#10B981';
-    if (percent >= 50) return '#F59E0B';
-    return '#EF4444';
+    if (percent >= 75) return '#32D74B'; // Green
+    if (percent >= 50) return '#FFD60A'; // Deep Yellow
+    return '#FF453A'; // Red
 };
 
 const parseGradeValue = (value) => {
     if (!value) return null;
+    // Handle "14,5" -> 14.5
     const num = parseFloat(String(value).replace(',', '.'));
     return isNaN(num) ? null : num;
 };
@@ -79,12 +80,20 @@ export function GradesPage() {
 
                 if (data?.periodes?.length > 0) {
                     const now = new Date();
-                    const current = data.periodes.find(p => {
+                    // Try to find current period, otherwise take the last one (often the most relevant)
+                    // or the first one if logic fails.
+                    let current = data.periodes.find(p => {
                         const start = new Date(p.dateDebut);
                         const end = new Date(p.dateFin);
                         return now >= start && now <= end;
-                    }) || data.periodes[0];
-                    setSelectedPeriod(current.codePeriode);
+                    });
+
+                    // If no current period found (e.g. summer), default to the last one (Trimestre 3)
+                    if (!current) {
+                        current = data.periodes[data.periodes.length - 1];
+                    }
+
+                    if (current) setSelectedPeriod(current.codePeriode);
                 }
             } catch (err) {
                 console.error('Failed to fetch grades:', err);
@@ -126,7 +135,9 @@ export function GradesPage() {
 
             const value = parseGradeValue(grade.valeur);
             const scale = parseFloat(grade.noteSur) || 20;
-            const coef = parseFloat(grade.coef) || 1;
+            // Coef usually string "1" or "0.5" or sometimes missing
+            const coefStr = String(grade.coef || '1').replace(',', '.');
+            const coef = parseFloat(coefStr) || 1;
 
             grouped[code].grades.push({
                 id: grade.id,
@@ -139,7 +150,10 @@ export function GradesPage() {
                 classAverage: parseGradeValue(grade.moyenneClasse),
             });
 
-            if (value !== null) {
+            if (value !== null && !isNaN(value)) {
+                // Normalize to 20 for calculation simplicity?
+                // Actually usually better to keep raw points * coef
+                // But let's assume normalized to 20 for average calc
                 const normalized = (value / scale) * 20;
                 grouped[code].totalPoints += normalized * coef;
                 grouped[code].totalCoef += coef;
@@ -149,13 +163,32 @@ export function GradesPage() {
         return Object.values(grouped)
             .map(s => ({
                 ...s,
-                average: s.totalCoef > 0 ? Math.round((s.totalPoints / s.totalCoef) * 100) / 100 : null,
+                average: s.totalCoef > 0 ? (s.totalPoints / s.totalCoef) : null,
             }))
             .sort((a, b) => a.name.localeCompare(b.name));
     }, [periodGrades]);
 
-    const generalAverage = parseGradeValue(periodData?.ensembleMatieres?.moyenneGenerale);
-    const classAverage = parseGradeValue(periodData?.ensembleMatieres?.moyenneClasse);
+    // --- AVERAGE CALCULATION LOGIC ---
+    // 1. Try to get official general average
+    let generalAverage = parseGradeValue(periodData?.ensembleMatieres?.moyenneGenerale);
+    let classAverage = parseGradeValue(periodData?.ensembleMatieres?.moyenneClasse);
+    let isEstimated = false;
+
+    // 2. If missing, calculate it manually from subjects
+    if (generalAverage === null && subjectsData.length > 0) {
+        let sumAvgs = 0;
+        let count = 0;
+        subjectsData.forEach(sub => {
+            if (sub.average !== null) {
+                sumAvgs += sub.average;
+                count++;
+            }
+        });
+        if (count > 0) {
+            generalAverage = sumAvgs / count;
+            isEstimated = true;
+        }
+    }
 
     const recentGrades = useMemo(() => {
         return [...periodGrades]
@@ -210,12 +243,14 @@ export function GradesPage() {
                 <div className="gp-stat gp-stat--main">
                     <div className="gp-stat-icon">📊</div>
                     <div className="gp-stat-content">
-                        <span className="gp-stat-label">Moyenne générale</span>
+                        <span className="gp-stat-label">
+                            Moyenne générale {isEstimated && <small>(est.)</small>}
+                        </span>
                         <span
                             className="gp-stat-value"
                             style={{ color: generalAverage ? getGradeColor(generalAverage) : undefined }}
                         >
-                            {generalAverage?.toFixed(2) || '--'}
+                            {generalAverage ? generalAverage.toFixed(2) : '--'}
                             <small>/20</small>
                         </span>
                     </div>
@@ -224,7 +259,7 @@ export function GradesPage() {
                             <div
                                 className="gp-stat-bar-fill"
                                 style={{
-                                    width: `${(generalAverage / 20) * 100}%`,
+                                    width: `${Math.min((generalAverage / 20) * 100, 100)}%`,
                                     background: getGradeColor(generalAverage)
                                 }}
                             />
@@ -300,7 +335,7 @@ export function GradesPage() {
                                     className="gp-subject-header"
                                     onClick={() => setExpandedSubject(expandedSubject === subject.code ? null : subject.code)}
                                 >
-                                    <div className="gp-subject-color" style={{ background: subject.color }} />
+                                    <div className="gp-subject-color" style={{ background: subject.color, boxShadow: `0 0 10px ${subject.color}66` }} />
                                     <div className="gp-subject-info">
                                         <h3>{subject.name}</h3>
                                         <span>{subject.grades.length} note{subject.grades.length > 1 ? 's' : ''}</span>
@@ -320,8 +355,9 @@ export function GradesPage() {
                                         <div
                                             className="gp-subject-bar-fill"
                                             style={{
-                                                width: `${(subject.average / 20) * 100}%`,
-                                                background: subject.color
+                                                width: `${Math.min((subject.average / 20) * 100, 100)}%`,
+                                                background: subject.color,
+                                                boxShadow: `0 0 10px ${subject.color}`
                                             }}
                                         />
                                     </div>

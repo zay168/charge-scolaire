@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: './', // Crucial for Electron to find assets
   plugins: [react()],
 
   // Proxy configuration for École Directe API (bypasses CORS in development)
