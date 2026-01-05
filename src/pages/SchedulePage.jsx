@@ -29,7 +29,7 @@ const SUBJECT_COLOR_CLASSES = {
     'LV2': 'orange',
     'LV3': 'orange',
     'ALLEMAND': 'yellow',
-    'ARABE': 'orange',
+    'ARABE': 'yellow',
     'LATIN': 'yellow',
     'LCA': 'yellow',
     'HISTOIRE': 'green',
@@ -52,14 +52,14 @@ const SUBJECT_COLOR_CLASSES = {
     'MUSIQUE': 'purple',
     'PHILOSOPHIE': 'gray',
     'PHILO': 'gray',
-    'SES': 'yellow',
-    'SC. ECONO': 'yellow',
+    'SES': 'orange',
+    'SC. ECONO': 'orange',
     'NSI': 'teal',
     'SNT': 'teal',
     'SC.NUMERIQ': 'teal',
-    'EMC': 'orange',
+    'EMC': 'gray',
     'HUMANITES': 'purple',
-    'SECTION EURO': 'orange',
+    'SECTION EURO': 'pink',
 };
 
 // Get color class for a subject
@@ -79,15 +79,17 @@ const getSubjectColorClass = (subject) => {
 const timeToMinutes = (timeStr) => {
     if (!timeStr) return 0;
 
-    // Robust parsing for various formats
-    // Try HH:MM format first if it looks like that
-    if (/^\d{1,2}:\d{2}(:\d{2})?$/.test(timeStr)) {
-        const [h, m] = timeStr.split(':').map(Number);
+    // 1. Try Regex Extraction (HH:MM) - Most robust method
+    // Matches "14:30", "T14:30", " 14:30"
+    const match = timeStr.match(/(\d{1,2}):(\d{2})/);
+    if (match) {
+        const h = parseInt(match[1], 10);
+        const m = parseInt(match[2], 10);
         return h * 60 + m;
     }
 
-    // Try standard date parsing
-    const date = new Date(timeStr.replace(' ', 'T')); // Handle space separator
+    // 2. Fallback to standard date parsing
+    const date = new Date(timeStr);
     if (!isNaN(date.getTime())) {
         return date.getHours() * 60 + date.getMinutes();
     }

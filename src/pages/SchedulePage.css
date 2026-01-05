@@ -361,74 +361,75 @@
 /* === NEON COLOR CLASSES === */
 /* Replace pastels with deep, rich backgrounds and bright accents */
 
-/* Blue - Maths */
+/* --- Entry Colors (Vibrant Neon) --- */
 .entry-color-blue {
-    background: rgba(10, 132, 255, 0.15) !important;
-    /* Dark Blue tint */
-    border-left-color: #0A84FF !important;
-    box-shadow: inset 0 0 20px rgba(10, 132, 255, 0.05);
+    background: rgba(66, 165, 245, 0.25);
+    border-left: 3px solid #42A5F5;
+    color: #90CAF9;
+    box-shadow: 0 0 10px rgba(66, 165, 245, 0.1);
 }
 
-.entry-color-blue:hover {
-    border-color: #0A84FF !important;
-}
-
-/* Yellow - Italian, Languages */
-.entry-color-yellow {
-    background: rgba(255, 214, 10, 0.15) !important;
-    border-left-color: #FFD60A !important;
-}
-
-.entry-color-yellow:hover {
-    border-color: #FFD60A !important;
-}
-
-/* Pink - French */
 .entry-color-pink {
-    background: rgba(255, 55, 95, 0.15) !important;
-    border-left-color: #FF375F !important;
+    background: rgba(236, 64, 122, 0.25);
+    border-left: 3px solid #EC407A;
+    color: #F48FB1;
+    box-shadow: 0 0 10px rgba(236, 64, 122, 0.1);
 }
 
-/* Green - Histoire-Geo */
-.entry-color-green {
-    background: rgba(48, 209, 88, 0.15) !important;
-    border-left-color: #30D158 !important;
+.entry-color-yellow {
+    background: rgba(255, 202, 40, 0.25);
+    border-left: 3px solid #FFCA28;
+    color: #FFE082;
+    box-shadow: 0 0 10px rgba(255, 202, 40, 0.1);
 }
 
-/* Cyan - Sciences, Physics */
-.entry-color-cyan {
-    background: rgba(100, 210, 255, 0.15) !important;
-    border-left-color: #64D2FF !important;
-}
-
-/* Red - EPS, Sport */
-.entry-color-red {
-    background: rgba(255, 69, 58, 0.15) !important;
-    border-left-color: #FF453A !important;
-}
-
-/* Purple - Arts, Philo */
-.entry-color-purple {
-    background: rgba(191, 90, 242, 0.15) !important;
-    border-left-color: #BF5AF2 !important;
-}
-
-/* Gray - Default */
-.entry-color-gray {
-    background: rgba(142, 142, 147, 0.15) !important;
-    border-left-color: #8E8E93 !important;
-}
-
-/* Orange - Section Européenne */
 .entry-color-orange {
-    background: rgba(255, 159, 10, 0.15) !important;
-    border-left-color: #FF9F0A !important;
+    background: rgba(255, 167, 38, 0.25);
+    border-left: 3px solid #FFA726;
+    color: #FFCC80;
+    box-shadow: 0 0 10px rgba(255, 167, 38, 0.1);
 }
 
-/* Teal - NSI, SNT */
+.entry-color-green {
+    background: rgba(102, 187, 106, 0.25);
+    border-left: 3px solid #66BB6A;
+    color: #A5D6A7;
+    box-shadow: 0 0 10px rgba(102, 187, 106, 0.1);
+}
+
+.entry-color-cyan {
+    background: rgba(38, 198, 218, 0.25);
+    border-left: 3px solid #26C6DA;
+    color: #80DEEA;
+    box-shadow: 0 0 10px rgba(38, 198, 218, 0.1);
+}
+
+.entry-color-red {
+    background: rgba(239, 83, 80, 0.25);
+    border-left: 3px solid #EF5350;
+    color: #EF9A9A;
+    box-shadow: 0 0 10px rgba(239, 83, 80, 0.1);
+}
+
+.entry-color-purple {
+    background: rgba(171, 71, 188, 0.25);
+    border-left: 3px solid #AB47BC;
+    color: #CE93D8;
+    box-shadow: 0 0 10px rgba(171, 71, 188, 0.1);
+}
+
 .entry-color-teal {
-    background: rgba(100, 210, 255, 0.15) !important;
-    border-left-color: #64D2FF !important;
+    background: rgba(38, 166, 154, 0.25);
+    border-left: 3px solid #26A69A;
+    color: #80CBC4;
+    box-shadow: 0 0 10px rgba(38, 166, 154, 0.1);
+}
+
+.entry-color-gray {
+    background: rgba(158, 158, 158, 0.25);
+    border-left: 3px solid #9E9E9E;
+    color: #EEEEEE;
+    box-shadow: 0 0 10px rgba(158, 158, 158, 0.1);
 }
 
 
