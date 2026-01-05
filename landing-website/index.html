@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charge Scolaire - L'Intelligence au service de ta réussite</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Scripts d'Animation -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="logo">
+            <div class="logo-icon"><i data-lucide="zap"></i></div>
+            <span class="logo-text">Charge Scolaire</span>
+        </div>
+        <div class="nav-links">
+            <a href="#features">Fonctionnalités</a>
+            <a href="#security">Sécurité</a>
+            <a href="https://github.com/zay168/charge-scolaire/releases/download/v1.0.1/Charge.Scolaire-1.0.1-win.zip"
+                class="btn-primary-header">
+                Télécharger v1.0.1
+                <i data-lucide="download" style="width: 16px;"></i>
+            </a>
+        </div>
+    </nav>
+
+    <main>
+        <!-- HERO SECTION -->
+        <header class="hero">
+            <div class="hero-bg-gradient"></div>
+            <div class="container hero-container">
+                <div class="hero-content">
+                    <div class="badge-pill reveal">
+                        <span class="dot"></span> Nouvelle version 1.0.1 disponible
+                    </div>
+                    <h1 class="hero-title reveal">
+                        L'intelligence artificielle<br>
+                        au service de ta <span class="gradient-text">réussite.</span>
+                    </h1>
+                    <p class="hero-desc reveal">
+                        Anticipe tes notes. Organise ton temps. Réussis ton année.
+                        L'outil ultime pour les élèves exigeants, compatible École Directe.
+                    </p>
+                    <div class="hero-buttons reveal">
+                        <a href="https://github.com/zay168/charge-scolaire/releases/download/v1.0.1/Charge.Scolaire-1.0.1-win.zip"
+                            class="btn-large primary">
+                            Télécharger (Portable)
+                            <i data-lucide="arrow-right"></i>
+                        </a>
+                        <a href="#features" class="btn-large secondary">
+                            Découvrir
+                        </a>
+                    </div>
+                </div>
+
+                <div class="hero-visual reveal-scale">
+                    <div class="app-window glass">
+                        <div class="window-bar">
+                            <div class="traffic-lights">
+                                <span class="red"></span><span class="yellow"></span><span class="green"></span>
+                            </div>
+                            <div class="window-title">Tableau de Bord</div>
+                        </div>
+                        <div class="window-content">
+                            <!-- Fake UI Content -->
+                            <div class="ui-sidebar">
+                                <div class="ui-item active"></div>
+                                <div class="ui-item"></div>
+                                <div class="ui-item"></div>
+                            </div>
+                            <div class="ui-main">
+                                <div class="ui-header">
+                                    <div class="ui-title-bar"></div>
+                                    <div class="ui-user"></div>
+                                </div>
+                                <div class="ui-grid">
+                                    <div class="ui-card card-1">
+                                        <div class="ui-stat-label">Moyenne</div>
+                                        <div class="ui-stat-value">16.8</div>
+                                        <div class="ui-chart-mini"></div>
+                                    </div>
+                                    <div class="ui-card card-2">
+                                        <div class="ui-stat-label">Charge</div>
+                                        <div class="progress-bar">
+                                            <div class="fill"></div>
+                                        </div>
+                                    </div>
+                                    <div class="ui-card card-3"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Floating Elements -->
+                        <div class="float-badge badge-1">
+                            <i data-lucide="trending-up"></i> +1.2 pts
+                        </div>
+                        <div class="float-badge badge-2">
+                            <i data-lucide="check-circle"></i> Devoirs à jour
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- FEATURES BENTO GRID -->
+        <section id="features" class="section-features">
+            <div class="container">
+                <div class="section-header reveal-up">
+                    <h2>Tout ce dont tu as besoin</h2>
+                    <p>Une suite d'outils puissants pour ne rien laisser au hasard.</p>
+                </div>
+
+                <div class="bento-grid">
+                    <!-- Feature 1 -->
+                    <div class="bento-item item-large reveal-up">
+                        <div class="bento-content">
+                            <div class="icon-box blue"><i data-lucide="brain-circuit"></i></div>
+                            <h3>Simulateur de Notes</h3>
+                            <p>Ajoute des notes fictives et vois instantanément l'impact sur ta moyenne. Plus de stress,
+                                plus de surprises.</p>
+                        </div>
+                        <div class="bento-visual visual-graph"></div>
+                    </div>
+
+                    <!-- Feature 2 -->
+                    <div class="bento-item item-tall reveal-up">
+                        <div class="bento-content">
+                            <div class="icon-box purple"><i data-lucide="moon"></i></div>
+                            <h3>Mode Sombre</h3>
+                            <p>Une interface sublime conçue pour les sessions nocturnes. Reposant pour les yeux,
+                                magnifique à regarder.</p>
+                        </div>
+                        <div class="bento-visual visual-darkmode"></div>
+                    </div>
+
+                    <!-- Feature 3 -->
+                    <div class="bento-item reveal-up">
+                        <div class="bento-content">
+                            <div class="icon-box green"><i data-lucide="shield"></i></div>
+                            <h3>100% Local</h3>
+                            <p>Tes données restent sur ton PC. Zero tracking.</p>
+                        </div>
+                    </div>
+
+                    <!-- Feature 4 -->
+                    <div class="bento-item reveal-up">
+                        <div class="bento-content">
+                            <div class="icon-box orange"><i data-lucide="zap"></i></div>
+                            <h3>Portable</h3>
+                            <p>Lance-le depuis une clé USB. Pas besoin d'admin.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECURITY SECTION -->
+        <section id="security" class="section-security">
+            <div class="container split-security">
+                <div class="security-text reveal-left">
+                    <h2>Sécurité Maximale.<br>Zéro Compromis.</h2>
+                    <p>Nous savons que les données scolaires sont sensibles. C'est pourquoi Charge Scolaire est conçu
+                        différemment.</p>
+
+                    <ul class="security-list">
+                        <li>
+                            <div class="check-icon"><i data-lucide="check"></i></div>
+                            <span>Les identifiants ne quittent jamais votre machine.</span>
+                        </li>
+                        <li>
+                            <div class="check-icon"><i data-lucide="check"></i></div>
+                            <span>Code Open Source vérifiable sur GitHub.</span>
+                        </li>
+                        <li>
+                            <div class="check-icon"><i data-lucide="check"></i></div>
+                            <span>Aucune connexion à des serveurs tiers.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="security-visual reveal-right">
+                    <div class="shield-3d">
+                        <div class="shield-inner">
+                            <i data-lucide="lock"></i>
+                        </div>
+                        <div class="shield-ring"></div>
+                        <div class="shield-particles"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER CTA -->
+        <footer class="footer-cta">
+            <div class="container">
+                <div class="cta-box reveal-scale">
+                    <h2>Prêt à booster ta moyenne ?</h2>
+                    <p>Télécharge l'application maintenant. C'est gratuit et Open Source.</p>
+                    <a href="https://github.com/zay168/charge-scolaire/releases/download/v1.0.1/Charge.Scolaire-1.0.1-win.zip"
+                        class="btn-large white">
+                        Télécharger v1.0.1
+                        <i data-lucide="download"></i>
+                    </a>
+                </div>
+                <div class="footer-links">
+                    <p>© 2026 Charge Scolaire</p>
+                    <div class="links">
+                        <a href="#">GitHub</a>
+                        <a href="#">Documentation</a>
+                        <a href="#">Contact</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>
