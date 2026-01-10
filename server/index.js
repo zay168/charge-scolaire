@@ -104,12 +104,13 @@ app.all('/api/ed/*', async (req, res) => {
             }
         }
 
-        // Get response
-        const data = await response.text();
+        // Get response content type
+        const contentType = response.headers.get('content-type') || 'application/json';
+        const isBinary = !contentType.includes('application/json') && !contentType.includes('text/');
 
         // Send response with session ID
         res.setHeader('X-Session-Id', sessionId);
-        res.setHeader('Content-Type', 'application/json');
+        res.setHeader('Content-Type', contentType);
 
         // Forward token headers from ED response to client
         const xToken = response.headers.get('x-token');
@@ -117,7 +118,16 @@ app.all('/api/ed/*', async (req, res) => {
         if (xToken) res.setHeader('X-Token', xToken);
         if (token2fa) res.setHeader('2FA-Token', token2fa);
 
-        res.status(response.status).send(data);
+        if (isBinary) {
+            // Binary file (image, docx, pdf, etc.) - forward as buffer
+            const buffer = await response.buffer();
+            console.log(`[Proxy] Forwarding binary file: ${contentType} (${buffer.length} bytes)`);
+            res.status(response.status).send(buffer);
+        } else {
+            // Text/JSON response
+            const data = await response.text();
+            res.status(response.status).send(data);
+        }
 
     } catch (error) {
         console.error('[Proxy Error]', error);
