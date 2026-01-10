@@ -364,70 +364,70 @@
 /* --- Entry Colors (Vibrant Neon) --- */
 .entry-color-blue {
     background: rgba(66, 165, 245, 0.25);
-    border-left: 3px solid #42A5F5;
+    border-left: 2px solid #42A5F5;
     color: #90CAF9;
     box-shadow: 0 0 10px rgba(66, 165, 245, 0.1);
 }
 
 .entry-color-pink {
     background: rgba(236, 64, 122, 0.25);
-    border-left: 3px solid #EC407A;
+    border-left: 2px solid #EC407A;
     color: #F48FB1;
     box-shadow: 0 0 10px rgba(236, 64, 122, 0.1);
 }
 
 .entry-color-yellow {
     background: rgba(255, 202, 40, 0.25);
-    border-left: 3px solid #FFCA28;
+    border-left: 2px solid #FFCA28;
     color: #FFE082;
     box-shadow: 0 0 10px rgba(255, 202, 40, 0.1);
 }
 
 .entry-color-orange {
     background: rgba(255, 167, 38, 0.25);
-    border-left: 3px solid #FFA726;
+    border-left: 2px solid #FFA726;
     color: #FFCC80;
     box-shadow: 0 0 10px rgba(255, 167, 38, 0.1);
 }
 
 .entry-color-green {
     background: rgba(102, 187, 106, 0.25);
-    border-left: 3px solid #66BB6A;
+    border-left: 2px solid #66BB6A;
     color: #A5D6A7;
     box-shadow: 0 0 10px rgba(102, 187, 106, 0.1);
 }
 
 .entry-color-cyan {
     background: rgba(38, 198, 218, 0.25);
-    border-left: 3px solid #26C6DA;
+    border-left: 2px solid #26C6DA;
     color: #80DEEA;
     box-shadow: 0 0 10px rgba(38, 198, 218, 0.1);
 }
 
 .entry-color-red {
     background: rgba(239, 83, 80, 0.25);
-    border-left: 3px solid #EF5350;
+    border-left: 2px solid #EF5350;
     color: #EF9A9A;
     box-shadow: 0 0 10px rgba(239, 83, 80, 0.1);
 }
 
 .entry-color-purple {
     background: rgba(171, 71, 188, 0.25);
-    border-left: 3px solid #AB47BC;
+    border-left: 2px solid #AB47BC;
     color: #CE93D8;
     box-shadow: 0 0 10px rgba(171, 71, 188, 0.1);
 }
 
 .entry-color-teal {
     background: rgba(38, 166, 154, 0.25);
-    border-left: 3px solid #26A69A;
+    border-left: 2px solid #26A69A;
     color: #80CBC4;
     box-shadow: 0 0 10px rgba(38, 166, 154, 0.1);
 }
 
 .entry-color-gray {
     background: rgba(158, 158, 158, 0.25);
-    border-left: 3px solid #9E9E9E;
+    border-left: 2px solid #9E9E9E;
     color: #EEEEEE;
     box-shadow: 0 0 10px rgba(158, 158, 158, 0.1);
 }

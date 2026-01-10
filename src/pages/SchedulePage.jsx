@@ -97,6 +97,14 @@ const timeToMinutes = (timeStr) => {
     return 0;
 };
 
+// Helper to format date as YYYY-MM-DD in local timezone (NOT UTC)
+const formatDateLocal = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+};
+
 // Get week dates (Monday to Friday or Saturday)
 const getWeekDates = (date, includeSaturday = true) => {
     const current = new Date(date);
@@ -177,7 +185,7 @@ export function SchedulePage() {
     const scheduleByDay = useMemo(() => {
         const grouped = {};
         weekDates.forEach(date => {
-            const dateStr = date.toISOString().split('T')[0];
+            const dateStr = formatDateLocal(date); // Use local timezone
             grouped[dateStr] = [];
         });
 
@@ -386,7 +394,7 @@ export function SchedulePage() {
 
             <div className="mobile-day-selector">
                 {weekDates.map((date, idx) => {
-                    const isToday = new Date().toISOString().split('T')[0] === date.toISOString().split('T')[0];
+                    const isToday = formatDateLocal(new Date()) === formatDateLocal(date);
                     return (
                         <button
                             key={idx}
@@ -410,9 +418,9 @@ export function SchedulePage() {
 
                 <div className="timetable__grid">
                     {weekDates.map((date, dayIndex) => {
-                        const dateStr = date.toISOString().split('T')[0];
+                        const dateStr = formatDateLocal(date);
                         const daySchedule = scheduleByDay[dateStr] || [];
-                        const isToday = new Date().toISOString().split('T')[0] === dateStr;
+                        const isToday = formatDateLocal(new Date()) === dateStr;
                         const isSelected = dayIndex === selectedDayIndex;
 
                         return (
