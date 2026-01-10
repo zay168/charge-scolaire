@@ -137,22 +137,22 @@ export function SchedulePage() {
     const weekDates = useMemo(() => getWeekDates(currentWeekStart), [currentWeekStart]);
     const dayNames = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
 
-    // Animations using GSAP
-    useLayoutEffect(() => {
-        if (!isLoading && containerRef.current) {
-            const ctx = gsap.context(() => {
-                gsap.from('.timetable__entry', {
-                    y: 20,
-                    opacity: 0,
-                    duration: 0.5,
-                    stagger: 0.05,
-                    ease: 'power2.out',
-                    clearProps: 'all' // Clear to avoid interfering with interactions
-                });
-            }, containerRef);
-            return () => ctx.revert();
-        }
-    }, [isLoading, schedule, selectedDayIndex]);
+    // GSAP animation DISABLED - was clearing inline positioning styles
+    // useLayoutEffect(() => {
+    //     if (!isLoading && containerRef.current) {
+    //         const ctx = gsap.context(() => {
+    //             gsap.from('.timetable__entry', {
+    //                 y: 20,
+    //                 opacity: 0,
+    //                 duration: 0.5,
+    //                 stagger: 0.05,
+    //                 ease: 'power2.out',
+    //                 clearProps: 'all'
+    //             });
+    //         }, containerRef);
+    //         return () => ctx.revert();
+    //     }
+    // }, [isLoading, schedule, selectedDayIndex]);
 
     // Fetch schedule
     useEffect(() => {
