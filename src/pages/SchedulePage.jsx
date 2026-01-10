@@ -182,6 +182,9 @@ export function SchedulePage() {
         });
 
         schedule.forEach(entry => {
+            // DEBUG: Log raw entry data
+            console.log('📅 Entry:', entry.subject, '| Raw start:', entry.start, '| Parsed minutes:', timeToMinutes(entry.start));
+
             const dateStr = entry.start?.split(' ')[0] || entry.start?.split('T')[0];
             if (grouped[dateStr]) {
                 const startMinutes = timeToMinutes(entry.start);
