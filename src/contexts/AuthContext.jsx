@@ -74,6 +74,11 @@ export function AuthProvider({ children }) {
 
                 if (storedToken && storedAccount) {
                     const account = JSON.parse(storedAccount);
+
+                    // Restore to API client
+                    ecoleDirecteClient.token = storedToken;
+                    ecoleDirecteClient.account = account;
+
                     setUser(account);
                     setUserType(storedUserType || USER_TYPES.STUDENT);
                     setIsAuthenticated(true);

@@ -315,6 +315,66 @@ class EcoleDirecteClient {
     }
 
     /**
+     * Get user messages
+     * @param {string} academicYear - Ex: "2025-2026"
+     */
+    async getMessages(academicYear = '2025-2026') {
+        this.ensureAuthenticated();
+
+        // 1. Get raw messages
+        const data = await makeRequest(
+            `/eleves/${this.account.id}/messages.awp?verbe=getall`,
+            this.token,
+            { anneeMessages: academicYear }
+        );
+
+        // 2. Decode content
+        const processMessages = (list) => {
+            return (list || []).map(msg => ({
+                ...msg,
+                content: this.decodeContent(msg.content)
+            }));
+        };
+
+        return {
+            received: processMessages(data.messages.received),
+            sent: processMessages(data.messages.sent),
+            archived: processMessages(data.messages.archived),
+        };
+    }
+
+    /**
+     * Get specific message content
+     * @param {number} messageId 
+     * @param {string} mode - "recu" or "envoye"
+     */
+    async getMessageContent(messageId, mode = 'recu') {
+        this.ensureAuthenticated();
+
+        const data = await makeRequest(
+            `/eleves/${this.account.id}/messages/${messageId}.awp?verbe=get`,
+            this.token,
+            { mode }
+        );
+
+        return {
+            ...data,
+            content: this.decodeContent(data.content)
+        };
+    }
+
+    /**
+     * Mark message as read
+     * @param {number} messageId 
+     */
+    async markMessageAsRead(messageId) {
+        this.ensureAuthenticated();
+        // Implementation guess - usually sending a simple update or just accessing it does it.
+        // For now, we assume getMessageContent triggers read status or we leave it.
+        // The capture didn't show a specific "markAsRead" call separate from get.
+    }
+
+    /**
      * Parse tests/controls from homework data
      */
     parseTests(data) {
@@ -343,6 +403,25 @@ class EcoleDirecteClient {
         }
 
         return tests;
+    }
+
+    /**
+     * Archive messages
+     * @param {number[]} messageIds 
+     * @param {string} academicYear 
+     */
+    async archiveMessages(messageIds, academicYear = '2025-2026') {
+        this.ensureAuthenticated();
+
+        return makeRequest(
+            `/eleves/${this.account.id}/messages.awp?verbe=put`,
+            this.token,
+            {
+                action: "archiver",
+                ids: messageIds,
+                anneeMessages: academicYear
+            }
+        );
     }
 
     /**
